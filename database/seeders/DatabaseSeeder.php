@@ -2,9 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\codigoMobilidade;
+use App\Models\disciplina;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +17,30 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        Model::unguard();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // call the seeders
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
+            escolasSeeder::class,
+            disciplinaSeeder::class,
+            cursoSeeder::class,
+            cursoDisciplinaSeeder::class,
+            escolaProfessorSeeder::class,
+            escolaAlunoSeeder::class,
+            codigoMobilidadeSeeder::class,
+            tipoSeeder::class,
+            eventoSeeder::class,
+            inscricaoSeeder::class,
+            conviteSeeder::class,
+            documentoSeeder::class,
+            logSeeder::class,
+            notificacaoSeeder::class,
         ]);
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        Model::reguard();
     }
 }
