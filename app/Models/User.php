@@ -17,7 +17,6 @@ class User extends Authenticatable
         'email',
         'num_processo',
         'password',
-        'role_id',
         'is_active',
         'is_aprovado',
     ];
@@ -29,16 +28,9 @@ class User extends Authenticatable
         'email' => 'string',
         'num_processo' => 'string',
         'password' => 'hashed',
-        'role_id' => 'integer',
         'is_active' => 'boolean',
         'is_aprovado' => 'boolean',
     ];
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'role_id');
-    }
-
 
     public function eventosCriados(){
         return $this->hasMany(evento::class, 'created_by');

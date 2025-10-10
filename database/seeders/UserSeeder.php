@@ -29,14 +29,10 @@ class UserSeeder extends Seeder
                     'nome'         => $userData['nome'],
                     'num_processo' => $userData['num_processo'],
                     'password'     => $userData['password'],
-                    'role_id'      => $userData['role_id'],
                     'is_active'    => $userData['is_active'],
                     'is_aprovado'  => $userData['is_aprovado'],
                 ]
             );
-
-            $roleName = $roles[$userData['role_id'] - 1];
-            $user->assignRole($roleName);
         }
 
         foreach ($this->addPermissions() as $permName => $rolesAllowed) {
@@ -54,10 +50,10 @@ class UserSeeder extends Seeder
     protected function addUsers(): array
     {
         return [
-            ['nome' => 'Admin','email' => 'admin@ipvc.pt','num_processo' => 'A001','password' => Hash::make('009'),'role_id' => 1,'is_active' => 1,'is_aprovado' => 1],
-            ['nome' => 'João','email' => 'joao.silva@ipvc.pt','num_processo' => 'P001','password' => Hash::make('009'),'role_id' => 2,'is_active' => 1,'is_aprovado' => 1],
-            ['nome' => 'Maria','email' => 'maria.sousa@ipvc.pt','num_processo' => 'E001','password' => Hash::make('009'),'role_id' => 3,'is_active' => 1,'is_aprovado' => 1],
-            ['nome' => 'Ana','email' => 'ana.intl@gmail.com','num_processo' => 'I001','password' => Hash::make('009'),'role_id' => 4,'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'Admin','email' => 'admin@ipvc.pt','num_processo' => 'A001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'João','email' => 'joao.silva@ipvc.pt','num_processo' => 'P001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'Maria','email' => 'maria.sousa@ipvc.pt','num_processo' => 'E001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'Ana','email' => 'ana.intl@gmail.com','num_processo' => 'I001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
         ];
     }
 
