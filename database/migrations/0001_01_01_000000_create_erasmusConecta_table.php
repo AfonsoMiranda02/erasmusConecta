@@ -15,13 +15,6 @@ return new class extends Migration
         // Tables Creation
         //=============================================
 
-        // Roles Table
-        Schema::create('roles', function (Blueprint $table) {
-            $table->id();
-            $table->string('nome', 50)->unique();
-            $table->timestamps();
-        });
-
         // Users Table
         Schema::create('users', function (Blueprint $table){
             $table->id();
@@ -29,7 +22,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('num_processo');
             $table->string('password');
-            $table->unsignedBigInteger('role_id');
             $table->boolean('is_active')->default(1); // 0 - Inactive 1 - Active
             $table->boolean('is_aprovado')->default(0); // 0 - Not Approved 1 - Approved
             $table->timestamps();
@@ -129,6 +121,18 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        //Presenças Table
+        Schema::create('presencas', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('evento_id');
+            $table->boolean('is_user_presente')->default('0'); //0-Não presente 1-Presente
+            $table->text('obs');
+            $table->unsignedBigInteger('submited_by');
+            $table->datetime('data_fim_atividade');
+            $table->timestamps();
+        });
+
         // Convites Table
         Schema::create('convites', function (Blueprint $table) {
             $table->id();
@@ -191,10 +195,6 @@ return new class extends Migration
         // ===========================================================
         // FOREIGN KEYS
         // ===========================================================
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreign('role_id')->references('id')->on('roles');
-        });
-
         Schema::table('curso_disciplinas', function (Blueprint $table) {
             $table->foreign('curso_id')->references('id')->on('cursos');
             $table->foreign('disciplina_id')->references('id')->on('disciplinas');
@@ -225,6 +225,12 @@ return new class extends Migration
         Schema::table('inscricoes', function (Blueprint $table) {
             $table->foreign('evento_id')->references('id')->on('evento');
             $table->foreign('user_id')->references('id')->on('users');
+        });
+
+        Schema::table('presencas', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('evento_id')->references('id')->on('evento');
+            $table->foreign('submited_by')->references('id')->on('users');
         });
 
         Schema::table('convites', function (Blueprint $table) {
@@ -260,6 +266,7 @@ return new class extends Migration
         Schema::dropIfExists('morph_logs');
         Schema::dropIfExists('morph_documentos');
         Schema::dropIfExists('convites');
+        Schema::dropIfExists('presencas');
         Schema::dropIfExists('inscricoes');
         Schema::dropIfExists('evento');
         Schema::dropIfExists('tipo');
@@ -271,7 +278,6 @@ return new class extends Migration
         Schema::dropIfExists('disciplinas');
         Schema::dropIfExists('escolas');
         Schema::dropIfExists('users');
-        Schema::dropIfExists('roles');
 
         Schema::enableForeignKeyConstraints();
     }

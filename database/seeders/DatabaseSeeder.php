@@ -20,9 +20,7 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-        // call the seeders
         $this->call([
-            RoleSeeder::class,
             UserSeeder::class,
             escolasSeeder::class,
             disciplinaSeeder::class,
@@ -34,6 +32,7 @@ class DatabaseSeeder extends Seeder
             tipoSeeder::class,
             eventoSeeder::class,
             inscricaoSeeder::class,
+            presencasSeeder::class,
             conviteSeeder::class,
             documentoSeeder::class,
             logSeeder::class,

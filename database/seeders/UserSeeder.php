@@ -29,14 +29,10 @@ class UserSeeder extends Seeder
                     'nome'         => $userData['nome'],
                     'num_processo' => $userData['num_processo'],
                     'password'     => $userData['password'],
-                    'role_id'      => $userData['role_id'],
                     'is_active'    => $userData['is_active'],
                     'is_aprovado'  => $userData['is_aprovado'],
                 ]
             );
-
-            $roleName = $roles[$userData['role_id'] - 1];
-            $user->assignRole($roleName);
         }
 
         foreach ($this->addPermissions() as $permName => $rolesAllowed) {
@@ -54,25 +50,76 @@ class UserSeeder extends Seeder
     protected function addUsers(): array
     {
         return [
-            ['nome' => 'Admin','email' => 'admin@ipvc.pt','num_processo' => 'A001','password' => Hash::make('009'),'role_id' => 1,'is_active' => 1,'is_aprovado' => 1],
-            ['nome' => 'João','email' => 'joao.silva@ipvc.pt','num_processo' => 'P001','password' => Hash::make('009'),'role_id' => 2,'is_active' => 1,'is_aprovado' => 1],
-            ['nome' => 'Maria','email' => 'maria.sousa@ipvc.pt','num_processo' => 'E001','password' => Hash::make('009'),'role_id' => 3,'is_active' => 1,'is_aprovado' => 1],
-            ['nome' => 'Ana','email' => 'ana.intl@gmail.com','num_processo' => 'I001','password' => Hash::make('009'),'role_id' => 4,'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'Admin','email' => 'admin@ipvc.pt','num_processo' => 'A001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'João','email' => 'joao.silva@ipvc.pt','num_processo' => 'P001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'Maria','email' => 'maria.sousa@ipvc.pt','num_processo' => 'E001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
+            ['nome' => 'Ana','email' => 'ana.intl@gmail.com','num_processo' => 'I001','password' => Hash::make('009'),'is_active' => 1,'is_aprovado' => 1],
         ];
     }
 
     protected function addPermissions(): array
     {
         return [
-            'show_eventos'                  => ['Administrador','Professor','Estudante','Intercambista'],
-            'create_eventos'                => ['Administrador','Professor'],
-            'edit_eventos'                  => ['Administrador','Professor'],
-            'arquive_eventos'               => ['Administrador'],
-            'validate_eventos'              => ['Administrador'],
-            'convite_eventos'               => ['Administrador','Professor','Estudante'],
-            'convite_accept'                => ['Administrador','Intercambista'],
-            'convite_show'                  => ['Administrador','Intercambista'],
-            'convite_arquive'               => ['Administrador','Professor','Estudante'],//Sendo que o Professor e o Estudante apenas podem ver os convites que ele fizeram e estão arquivados
+            'Codigo-Mobilidade_Submit'              =>['Intercambista'],
+            'Validar_Intercambistas'                =>['Administrador'],
+            //Users
+            'Users_Create'                          =>['Administrador'],
+            'Users_Edit'                            =>['Administrador'],
+            'Users_View'                            =>['Administrador'],
+            'Users_Active-Deactive'                 =>['Administrador'],
+            'Users_Arquive'                         =>['Administrador'],
+            'Users_Arquive_View'                    =>['Administrador'],
+            'Users_Aprove'                          =>['Administrador'],
+            //PDFs
+            'PDF_Create'                            =>['Administrador'],
+            'PDF_Submit'                            =>['Administrador','Intercambista'],
+            'PDF_View'                              =>['Administrador'],
+            //Logs
+            'Logs_View'                             =>['Administrador'],
+            //Documents
+            'Docs_View'                             =>['Administrador'],
+            //Notificações
+            'Notifs_View'                           =>['Administrador'],
+            //Atividades
+            'Atividades_Create'                     =>['Administrador','Professor','Estudante'],
+            'Atividades_Edit'                       =>['Administrador','Professor','Estudante'],
+            'Atividades_View'                       =>['Administrador','Professor','Estudante','Intercambista'],
+            'Atividades_Arquive'                    =>['Administrador','Professor','Estudante'],
+            'Atividades_Arquive_View'               =>['Administrador','Professor','Estudante'],
+            'Atividades_Aprove'                     =>['Administrador'],
+            //Convites
+            'Convites_Create'                       =>['Administrador','Professor','Estudante'],
+            'Convites_Edit'                         =>['Administrador','Professor','Estudante'],
+            'Convites_View'                         =>['Administrador','Professor','Estudante','Intercambista'],
+            'Convites_Arquive'                      =>['Administrador','Professor','Estudante'],
+            'Convites_Arquive_View'                 =>['Administrador','Professor','Estudante'],
+            'Convites_Aprove'                       =>['Administrador'],
+            //Inscrições
+            'Inscricao_Create'                      =>['Intercambista'],
+            'Inscricao_Edit'                        =>['Administrador','Professor','Estudante'],
+            'Inscricao_View'                        =>['Administrador','Professor','Estudante','Intercambista'],
+            'Inscricao_Arquive'                     =>['Administrador','Professor','Estudante'],
+            'Inscricao_Arquive_View'                =>['Administrador','Professor','Estudante'],
+            'Inscricao_Aprove'                      =>['Administrador'],
+            'Inscricaoes_Cancelar'                  =>['Intercambista'],
+            //Arquivos
+            'Arquivo_Edit'                          =>['Administrador'],
+            'Arquivo_View'                          =>['Administrador'],
+            //Escolas
+            'Escola_Create'                         =>['Administrador'],
+            'Escola_Edit'                           =>['Administrador'],
+            'Escola_View'                           =>['Administrador'],
+            'Escola_Arquive'                        =>['Administrador'],
+            //Cursos
+            'Curso_Create'                          =>['Administrador'],
+            'Curso_Edit'                            =>['Administrador'],
+            'Curso_View'                            =>['Administrador'],
+            'Curso_Arquive'                         =>['Administrador'],
+            //Disciplinas   
+            'Disciplina_Create'                     =>['Administrador'],
+            'Disciplina_Edit'                       =>['Administrador'],
+            'Disciplina_View'                       =>['Administrador'],
+            'Disciplina_Arquive'                    =>['Administrador'],
         ];
     }
 }
