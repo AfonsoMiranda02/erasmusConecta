@@ -57,8 +57,9 @@ class User extends Authenticatable
     }
 
     public function logs(){
-        return $this->hasMany(logs::class, 'user_id');
+        return $this->morphMany(logs::class, 'morphable');
     }
+
     public function notificacoes(){
         return $this->hasMany(notificacoes::class, 'user_id');
     }

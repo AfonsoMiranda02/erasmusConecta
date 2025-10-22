@@ -29,4 +29,8 @@ class documentos extends Model
     public function user(){
         return $this->belongsTo(User::class, 'entregue_por_user_id');
     }
+    
+    public function morphable(){
+        return $this->morphTo();
+    }
 }

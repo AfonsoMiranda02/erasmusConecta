@@ -41,4 +41,8 @@ class convite extends Model
     public function destinatario(){
         return $this->belongsTo(User::class, 'for_user');
     }
+
+    public function notificacoes(){
+        return $this->morphMany(notificacoes::class, 'morphable');
+    }
 }

@@ -51,4 +51,16 @@ class evento extends Model
     public function convites(){
         return $this->hasMany(convite::class, 'evento_id');
     }
+
+    public function documentos(){
+        return $this->morphMany(documentos::class, 'morphable');
+    }
+
+    public function logs(){
+        return $this->morphMany(logs::class, 'morphable');
+    }
+
+    public function notificacoes(){
+        return $this->morphMany(notificacoes::class, 'morphable');
+    }
 }
