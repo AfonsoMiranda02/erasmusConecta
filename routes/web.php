@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\CursoController;
 use App\Http\Controllers\Admin\DisciplinaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AtividadeController as AdminAtividadeController;
+use App\Http\Controllers\PasswordResetController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,6 +24,12 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    
+    // Rotas de recuperação de palavra-passe
+    Route::get('/password/forgot', [PasswordResetController::class, 'showRequestForm'])->name('password.request');
+    Route::post('/password/forgot', [PasswordResetController::class, 'sendCode'])->name('password.forgot');
+    Route::get('/password/reset', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/password/reset', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
 });
 
 // Rotas protegidas (apenas para utilizadores autenticados)

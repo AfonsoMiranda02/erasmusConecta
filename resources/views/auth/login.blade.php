@@ -7,6 +7,12 @@
         <p class="text-sm text-gray-600">Acede à tua conta ErasmusConecta</p>
     </div>
 
+    @if(session('password_reset'))
+        <div class="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
+            {{ session('password_reset') }}
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
@@ -78,7 +84,7 @@
             </div>
 
             <div class="text-sm">
-                <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                <a href="{{ route('password.request') }}" class="font-medium text-blue-600 hover:text-blue-500">
                     Esqueceste-te da palavra-passe?
                 </a>
             </div>
