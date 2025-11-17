@@ -18,6 +18,7 @@ class evento extends Model
         'created_by',
         'aprovado_por',
         'status',
+        'is_public',
     ];
 
     protected $casts = [
@@ -30,6 +31,7 @@ class evento extends Model
         'created_by' => 'integer',
         'aprovado_por' => 'integer',
         'status' => 'string',
+        'is_public' => 'boolean',
     ];
         
     public function tipo(){
