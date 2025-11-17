@@ -6,11 +6,11 @@
 <!-- Sidebar -->
 <aside 
     id="sidebar"
-    class="fixed lg:static inset-y-0 left-0 z-30 w-64 bg-gray-50 border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
+    class="fixed inset-y-0 left-0 z-30 w-64 h-screen bg-gray-50 border-r border-gray-200 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
 >
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-screen">
         <!-- Logo -->
-        <div class="flex items-center h-14 px-6 border-b border-gray-200">
+        <div class="flex items-center h-14 px-6">
             <h1 class="text-lg font-semibold text-teal-700">ErasmusConecta</h1>
         </div>
 

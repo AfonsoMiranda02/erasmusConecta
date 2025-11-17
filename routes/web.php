@@ -5,6 +5,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AtividadeController;
 use App\Http\Controllers\ConviteController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\EscolaController;
+use App\Http\Controllers\Admin\CursoController;
+use App\Http\Controllers\Admin\DisciplinaController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AtividadeController as AdminAtividadeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -48,4 +54,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/convites/{id}/accept', [ConviteController::class, 'accept'])->name('convites.accept');
     Route::post('/convites/{id}/reject', [ConviteController::class, 'reject'])->name('convites.reject');
     Route::delete('/convites/{id}', [ConviteController::class, 'destroy'])->name('convites.destroy');
+    
+    // Área de Administração (apenas para admins)
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+        
+        // Gestão Académica
+        Route::resource('escolas', EscolaController::class);
+        Route::resource('cursos', CursoController::class);
+        Route::resource('disciplinas', DisciplinaController::class);
+        
+        // Gestão de Utilizadores e Atividades
+        Route::resource('users', UserController::class);
+        Route::resource('atividades', AdminAtividadeController::class);
+    });
 });

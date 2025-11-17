@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Dashboard') - ErasmusConecta</title>
+    <title>@yield('title', 'Admin') - ErasmusConecta</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -16,8 +16,8 @@
 </head>
 <body class="bg-gray-50">
     <div class="min-h-screen">
-        <!-- Sidebar -->
-        @include('layouts.sidebar')
+        <!-- Sidebar Admin -->
+        @include('layouts.admin-sidebar')
 
         <!-- Main Content -->
         <div class="lg:ml-64 flex flex-col h-screen">
