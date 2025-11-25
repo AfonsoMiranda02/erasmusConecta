@@ -101,3 +101,66 @@ Para setup automático no Windows:
 ```
 
 BY Fosforo and Miranda.
+
+
+# When Creating a User Paste this:
+```php
+$prefix = strtoupper(substr($user->num_processo, 0, 1));
+$roleMap = [
+    'A' => 'Administrador',
+    'P' => 'Professor',
+    'E' => 'Estudante',
+    'I' => 'Intercambista',
+];
+
+if (isset($roleMap[$prefix])) {
+    $user->assignRole($roleMap[$prefix]);
+}
+```
+
+# When using the permissions on the website use this:
+```php
+@can('View_Button')
+    <button>O meu botão</button>
+@endcan
+```
+
+**or**
+
+```php
+@if(auth()->user()->can('View_Button'))
+    <button>O meu botão</button>
+@endif
+```
+
+##### **if you want to see if the user has a specific role**
+
+```php
+@role('Administrador')
+    <button>Botão de admin</button>
+@endrole
+```
+
+**or**
+
+```php
+@if(auth()->user()->hasRole('Administrador'))
+    <button>Botão de admin</button>
+@endif
+```
+
+##### **if you want to hide a button for a user that doest have the specific role**
+
+```php
+@cannot('View_Button')
+    <button>Botão de admin</button>
+@endcannot
+```
+
+**or**
+
+```php
+@if(!auth()->user()->can('View_Button'))
+    <button>Botão de admin</button>
+@endif
+```
