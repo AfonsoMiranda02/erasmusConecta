@@ -253,6 +253,9 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-800">{{ $convite->evento->titulo ?? 'N/A' }}</p>
+                                @if($convite->descricao)
+                                <p class="text-xs text-gray-600 mt-1 italic">{{ $convite->descricao }}</p>
+                                @endif
                                 <p class="text-xs text-gray-500 mt-1">
                                     Intercambista: {{ $convite->destinatario->nome ?? 'N/A' }}
                                 </p>

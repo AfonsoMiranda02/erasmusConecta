@@ -185,6 +185,9 @@
                             </div>
                             <div class="ml-3 flex-1">
                                 <p class="text-sm font-medium text-gray-800">{{ $convite->titulo }}</p>
+                                @if($convite->descricao)
+                                <p class="text-xs text-gray-600 mt-1 italic">{{ $convite->descricao }}</p>
+                                @endif
                                 <p class="text-xs text-gray-500 mt-1">
                                     De {{ $convite->remetente->nome ?? 'Utilizador' }} • {{ $convite->created_at->diffForHumans() }}
                                 </p>

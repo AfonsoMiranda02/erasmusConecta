@@ -157,6 +157,7 @@
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Intercambista</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Enviado por</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descrição</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Data</th>
                         </tr>
@@ -169,6 +170,13 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                 {{ $convite->remetente->nome ?? 'N/A' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-600">
+                                @if($convite->descricao)
+                                    <span class="italic">{{ $convite->descricao }}</span>
+                                @else
+                                    <span class="text-gray-400">—</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
