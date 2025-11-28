@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DisciplinaController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AtividadeController as AdminAtividadeController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\EmailVerificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,12 +25,19 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/register/verify', [AuthController::class, 'showVerifyForm'])->name('register.verify');
+    Route::post('/register/verify', [AuthController::class, 'verifyCode'])->name('register.verify');
     
     // Rotas de recuperação de palavra-passe
     Route::get('/password/forgot', [PasswordResetController::class, 'showRequestForm'])->name('password.request');
     Route::post('/password/forgot', [PasswordResetController::class, 'sendCode'])->name('password.forgot');
     Route::get('/password/reset', [PasswordResetController::class, 'showResetForm'])->name('password.reset');
     Route::post('/password/reset', [PasswordResetController::class, 'resetPassword'])->name('password.reset');
+    
+    // Rotas de verificação de email
+    Route::get('/email/verify/{token}', [EmailVerificationController::class, 'verify'])->name('email.verify');
+    Route::get('/email/resend', [EmailVerificationController::class, 'showResendForm'])->name('email.resend.show');
+    Route::post('/email/resend', [EmailVerificationController::class, 'resend'])->name('email.resend');
 });
 
 // Rotas protegidas (apenas para utilizadores autenticados)
@@ -56,6 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/atividades/{id}/reject', [AtividadeController::class, 'reject'])->name('atividades.reject');
     
     // Convites
+    Route::get('/convites', [ConviteController::class, 'index'])->name('convites.index');
     Route::get('/atividades/{eventoId}/convites/create', [ConviteController::class, 'create'])->name('convites.create');
     Route::post('/atividades/{eventoId}/convites', [ConviteController::class, 'store'])->name('convites.store');
     Route::post('/convites/{id}/accept', [ConviteController::class, 'accept'])->name('convites.accept');

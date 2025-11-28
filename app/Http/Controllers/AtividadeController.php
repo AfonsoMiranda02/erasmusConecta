@@ -26,42 +26,40 @@ class AtividadeController extends Controller
         // Verifica diretamente o num_processo
         $primeiroChar = !empty($user->num_processo) ? strtoupper(trim($user->num_processo)[0]) : '';
 
+        // Buscar IDs de atividades para as quais o utilizador foi convidado (independente do estado)
+        $eventosConvidados = convite::where('for_user', $user->id)
+            ->pluck('evento_id')
+            ->toArray();
+
         // Filtros baseados no cargo
         if ($primeiroChar === 'A') {
             // Admin vê todas as atividades (pendentes, aprovadas, rejeitadas)
             $eventos = $query->orderBy('data_hora', 'desc')->get();
         } elseif ($primeiroChar === 'P') {
-            // Professor vê as suas atividades + atividades aprovadas
-            $eventos = $query->where(function($q) use ($user) {
-                $q->where('created_by', $user->id)
-                  ->orWhere('status', 'aprovado');
-            })->orderBy('data_hora', 'desc')->get();
+            // Professor vê as suas atividades + atividades aprovadas (públicas ou por convite)
+            $eventos = $query->where('status', 'aprovado')
+                ->where(function($q) use ($user, $eventosConvidados) {
+                    $q->where('created_by', $user->id)
+                      ->orWhere(function($subQ) use ($eventosConvidados) {
+                          // Atividades públicas OU atividades para as quais foi convidado
+                          $subQ->where('is_public', true)
+                               ->orWhereIn('id', $eventosConvidados);
+                      });
+                })
+                ->orderBy('data_hora', 'desc')
+                ->get();
         } else {
             // Estudante e Intercambista: apenas atividades aprovadas
-            // Se for intercambista, só vê atividades públicas OU atividades para as quais foi convidado
-            if ($primeiroChar === 'I') {
-                // Buscar IDs de atividades para as quais foi convidado
-                $eventosConvidados = convite::where('for_user', $user->id)
-                    ->where('estado', 'aceite')
-                    ->pluck('evento_id')
-                    ->toArray();
-                
-                $eventos = $query->where('status', 'aprovado')
-                    ->where('data_hora', '>=', now())
-                    ->where(function($q) use ($eventosConvidados) {
-                        $q->where('is_public', true)
-                          ->orWhereIn('id', $eventosConvidados);
-                    })
-                    ->orderBy('data_hora', 'asc')
-                    ->get();
-            } else {
-                // Estudante: apenas atividades públicas e aprovadas
-                $eventos = $query->where('status', 'aprovado')
-                    ->where('is_public', true)
-                    ->where('data_hora', '>=', now())
-                    ->orderBy('data_hora', 'asc')
-                    ->get();
-            }
+            // Veem atividades públicas OU atividades para as quais foram convidados
+            $eventos = $query->where('status', 'aprovado')
+                ->where('data_hora', '>=', now())
+                ->where(function($q) use ($eventosConvidados) {
+                    // Atividades públicas OU atividades para as quais foi convidado
+                    $q->where('is_public', true)
+                      ->orWhereIn('id', $eventosConvidados);
+                })
+                ->orderBy('data_hora', 'asc')
+                ->get();
         }
 
         // Obter tipos para filtros (se necessário)

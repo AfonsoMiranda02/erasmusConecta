@@ -35,10 +35,15 @@ class ConviteController extends Controller
             abort(403, 'Só podes criar convites para atividades que criaste.');
         }
 
-        // Buscar utilizadores intercambistas para convidar
-        $intercambistas = User::where('num_processo', 'LIKE', 'I%')
-            ->where('is_active', true)
+        // Buscar utilizadores para convidar (todos os utilizadores ativos e aprovados)
+        // Pode convidar estudantes (E), professores (P), intercambistas (I)
+        $utilizadores = User::where('is_active', true)
             ->where('is_aprovado', true)
+            ->where(function($q) {
+                $q->where('num_processo', 'LIKE', 'E%')
+                  ->orWhere('num_processo', 'LIKE', 'P%')
+                  ->orWhere('num_processo', 'LIKE', 'I%');
+            })
             ->orderBy('nome')
             ->get();
 
@@ -47,7 +52,7 @@ class ConviteController extends Controller
             ->pluck('for_user')
             ->toArray();
 
-        return view('convites.create', compact('evento', 'intercambistas', 'convitesExistentes'));
+        return view('convites.create', compact('evento', 'utilizadores', 'convitesExistentes'));
     }
 
     /**
@@ -79,9 +84,9 @@ class ConviteController extends Controller
             'for_user.*' => ['required', 'exists:users,id'],
             'descricao' => ['nullable', 'string', 'max:1000'],
         ], [
-            'for_user.required' => 'Deve selecionar pelo menos um intercambista.',
+            'for_user.required' => 'Deve selecionar pelo menos um utilizador.',
             'for_user.array' => 'Formato inválido.',
-            'for_user.min' => 'Deve selecionar pelo menos um intercambista.',
+            'for_user.min' => 'Deve selecionar pelo menos um utilizador.',
             'for_user.*.required' => 'Utilizador inválido.',
             'for_user.*.exists' => 'Um dos utilizadores selecionados não existe.',
             'descricao.max' => 'A descrição não pode exceder 1000 caracteres.',
@@ -98,19 +103,20 @@ class ConviteController extends Controller
             return back()->withErrors(['for_user' => 'Já existem convites para: ' . implode(', ', $usersExistentes)])->withInput();
         }
 
-        // Verificar se todos os utilizadores são intercambistas
+        // Verificar se todos os utilizadores são válidos (E, P ou I, mas não A)
         $usersConvidados = User::whereIn('id', $validated['for_user'])->get();
-        $naoIntercambistas = [];
+        $utilizadoresInvalidos = [];
         
         foreach ($usersConvidados as $userConvidado) {
             $primeiroChar = !empty($userConvidado->num_processo) ? strtoupper(trim($userConvidado->num_processo)[0]) : '';
-            if ($primeiroChar !== 'I') {
-                $naoIntercambistas[] = $userConvidado->nome;
+            // Não se pode convidar admins
+            if ($primeiroChar === 'A' || empty($primeiroChar)) {
+                $utilizadoresInvalidos[] = $userConvidado->nome;
             }
         }
 
-        if (!empty($naoIntercambistas)) {
-            return back()->withErrors(['for_user' => 'Só podes convidar intercambistas. Os seguintes não são intercambistas: ' . implode(', ', $naoIntercambistas)])->withInput();
+        if (!empty($utilizadoresInvalidos)) {
+            return back()->withErrors(['for_user' => 'Não podes convidar os seguintes utilizadores: ' . implode(', ', $utilizadoresInvalidos)])->withInput();
         }
 
         // Criar múltiplos convites
@@ -152,6 +158,23 @@ class ConviteController extends Controller
 
         $convite->update(['estado' => 'aceite']);
 
+        // Opcional: criar inscrição automaticamente ao aceitar o convite
+        // Verificar se já existe inscrição
+        $inscricaoExistente = \App\Models\inscricao::where('evento_id', $convite->evento_id)
+            ->where('user_id', $user->id)
+            ->where('is_active', true)
+            ->first();
+
+        if (!$inscricaoExistente && $convite->evento) {
+            \App\Models\inscricao::create([
+                'evento_id' => $convite->evento_id,
+                'user_id' => $user->id,
+                'estado' => 'aprovada', // Aceitar convite = inscrição aprovada
+                'date_until_cancelation' => $convite->evento->data_hora,
+                'is_active' => true,
+            ]);
+        }
+
         return back()->with('success', 'Convite aceite com sucesso!');
     }
 
@@ -171,6 +194,33 @@ class ConviteController extends Controller
         $convite->update(['estado' => 'recusado']);
 
         return back()->with('success', 'Convite rejeitado.');
+    }
+
+    /**
+     * Mostra a lista de convites recebidos pelo utilizador
+     */
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        
+        // Query base
+        $query = convite::where('for_user', $user->id)
+            ->with(['evento.tipo', 'evento.criador', 'remetente']);
+        
+        // Filtrar por estado se fornecido
+        if ($request->has('estado') && $request->estado) {
+            $query->where('estado', $request->estado);
+        }
+        
+        // Buscar todos os convites recebidos pelo utilizador
+        $convites = $query->orderBy('created_at', 'desc')->get();
+        
+        // Contar convites pendentes (sempre, independente do filtro)
+        $convitesPendentes = convite::where('for_user', $user->id)
+            ->where('estado', 'pendente')
+            ->count();
+        
+        return view('convites.index', compact('convites', 'convitesPendentes'));
     }
 
     /**

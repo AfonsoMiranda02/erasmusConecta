@@ -16,7 +16,7 @@
             Voltar à atividade
         </a>
         <h1 class="text-2xl font-semibold text-gray-800 mt-2">Convidar para Atividade</h1>
-        <p class="mt-1 text-sm text-gray-500">Convidar intercambistas para "{{ $evento->titulo }}"</p>
+        <p class="mt-1 text-sm text-gray-500">Convidar utilizadores para "{{ $evento->titulo }}"</p>
     </div>
 
     <!-- Informações da Atividade -->
@@ -33,11 +33,11 @@
 
     <!-- Formulário de Convite -->
     <div class="bg-white border border-gray-200 rounded-lg p-6">
-        <h2 class="text-base font-semibold text-gray-800 mb-4">Selecionar Intercambistas</h2>
+        <h2 class="text-base font-semibold text-gray-800 mb-4">Selecionar Utilizadores</h2>
         
-        @if($intercambistas->isEmpty())
+        @if($utilizadores->isEmpty())
         <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p class="text-sm text-yellow-800">Não há intercambistas disponíveis para convidar.</p>
+            <p class="text-sm text-yellow-800">Não há utilizadores disponíveis para convidar.</p>
         </div>
         @else
         <form method="POST" action="{{ route('convites.store', $evento->id) }}" class="space-y-6" id="conviteForm">
@@ -46,7 +46,7 @@
             <!-- Campo de Pesquisa -->
             <div>
                 <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
-                    Pesquisar Intercambista
+                    Pesquisar Utilizador
                 </label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -63,11 +63,11 @@
                 </div>
             </div>
 
-            <!-- Lista de Intercambistas -->
+            <!-- Lista de Utilizadores -->
             <div>
                 <div class="flex items-center justify-between mb-2">
                     <label class="block text-sm font-medium text-gray-700">
-                        Intercambistas <span class="text-red-500">*</span>
+                        Utilizadores <span class="text-red-500">*</span>
                     </label>
                     <button 
                         type="button" 
@@ -77,28 +77,28 @@
                         Selecionar todos
                     </button>
                 </div>
-                <div class="border border-gray-300 rounded-lg p-4 max-h-96 overflow-y-auto bg-gray-50" id="intercambistasList">
+                <div class="border border-gray-300 rounded-lg p-4 max-h-96 overflow-y-auto bg-gray-50" id="utilizadoresList">
                     @php
-                        $intercambistasDisponiveis = $intercambistas->filter(function($intercambista) use ($convitesExistentes) {
-                            return !in_array($intercambista->id, $convitesExistentes);
+                        $utilizadoresDisponiveis = $utilizadores->filter(function($utilizador) use ($convitesExistentes) {
+                            return !in_array($utilizador->id, $convitesExistentes);
                         });
                     @endphp
-                    @if($intercambistasDisponiveis->isEmpty())
-                    <p class="text-sm text-gray-500 text-center py-4">Todos os intercambistas já foram convidados.</p>
+                    @if($utilizadoresDisponiveis->isEmpty())
+                    <p class="text-sm text-gray-500 text-center py-4">Todos os utilizadores já foram convidados.</p>
                     @else
-                    @foreach($intercambistasDisponiveis as $intercambista)
-                    <label class="flex items-center p-3 hover:bg-white rounded-lg cursor-pointer transition-colors intercambista-item border-b border-gray-200 last:border-b-0" 
-                           data-nome="{{ strtolower($intercambista->nome) }}" 
-                           data-email="{{ strtolower($intercambista->email) }}">
+                    @foreach($utilizadoresDisponiveis as $utilizador)
+                    <label class="flex items-center p-3 hover:bg-white rounded-lg cursor-pointer transition-colors utilizador-item border-b border-gray-200 last:border-b-0" 
+                           data-nome="{{ strtolower($utilizador->nome) }}" 
+                           data-email="{{ strtolower($utilizador->email) }}">
                         <input 
                             type="checkbox" 
                             name="for_user[]" 
-                            value="{{ $intercambista->id }}"
+                            value="{{ $utilizador->id }}"
                             class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
                         >
                         <div class="ml-3 flex-1">
-                            <p class="text-sm font-medium text-gray-800">{{ $intercambista->nome }}</p>
-                            <p class="text-xs text-gray-500">{{ $intercambista->email }}</p>
+                            <p class="text-sm font-medium text-gray-800">{{ $utilizador->nome }}</p>
+                            <p class="text-xs text-gray-500">{{ $utilizador->email }}</p>
                         </div>
                     </label>
                     @endforeach
@@ -112,11 +112,11 @@
                 @enderror
                 @if(count($convitesExistentes) > 0)
                 <p class="mt-2 text-xs text-gray-500">
-                    {{ count($convitesExistentes) }} intercambista(s) já foram convidados para esta atividade e não aparecem na lista.
+                    {{ count($convitesExistentes) }} utilizador(es) já foram convidados para esta atividade e não aparecem na lista.
                 </p>
                 @endif
                 <p class="mt-2 text-xs text-gray-500" id="selectedCount">
-                    <span id="count">0</span> intercambista(s) selecionado(s)
+                    <span id="count">0</span> utilizador(es) selecionado(s)
                 </p>
             </div>
 
@@ -158,12 +158,12 @@
 </div>
 
 <script>
-    // Pesquisa de intercambistas
+    // Pesquisa de utilizadores
     const searchInput = document.getElementById('search');
     if (searchInput) {
         searchInput.addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase().trim();
-            const items = document.querySelectorAll('.intercambista-item');
+            const items = document.querySelectorAll('.utilizador-item');
             let visibleCount = 0;
             
             items.forEach(item => {
@@ -179,13 +179,13 @@
             });
 
             // Mostrar mensagem se não houver resultados
-            const listContainer = document.getElementById('intercambistasList');
+            const listContainer = document.getElementById('utilizadoresList');
             let noResultsMsg = listContainer.querySelector('.no-results');
             if (visibleCount === 0 && searchTerm !== '') {
                 if (!noResultsMsg) {
                     noResultsMsg = document.createElement('p');
                     noResultsMsg.className = 'no-results text-sm text-gray-500 text-center py-4';
-                    noResultsMsg.textContent = 'Nenhum intercambista encontrado.';
+                    noResultsMsg.textContent = 'Nenhum utilizador encontrado.';
                     listContainer.appendChild(noResultsMsg);
                 }
                 noResultsMsg.style.display = 'block';
@@ -211,7 +211,7 @@
         const allChecked = Array.from(checkboxes).every(cb => cb.checked);
         
         checkboxes.forEach(checkbox => {
-            if (checkbox.closest('.intercambista-item').style.display !== 'none') {
+            if (checkbox.closest('.utilizador-item').style.display !== 'none') {
                 checkbox.checked = !allChecked;
             }
         });
@@ -234,7 +234,7 @@
             const checkboxes = document.querySelectorAll('input[name="for_user[]"]:checked');
             if (checkboxes.length === 0) {
                 e.preventDefault();
-                alert('Deves selecionar pelo menos um intercambista.');
+                alert('Deves selecionar pelo menos um utilizador.');
                 return false;
             }
         });

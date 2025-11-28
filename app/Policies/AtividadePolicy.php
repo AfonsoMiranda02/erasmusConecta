@@ -27,19 +27,30 @@ class AtividadePolicy
             return true;
         }
 
-        // Professor vê as suas + aprovadas
-        if (!empty($user->num_processo) && strtoupper(trim($user->num_processo)[0]) === 'P') {
-            return $evento->created_by === $user->id || $evento->status === 'aprovado';
+        // Verificar se o utilizador foi convidado para esta atividade (por convite)
+        $foiConvidado = \App\Models\convite::where('evento_id', $evento->id)
+            ->where('for_user', $user->id)
+            ->exists();
+
+        // Se foi convidado, pode ver mesmo que seja por convite (is_public = false)
+        if ($foiConvidado && $evento->status === 'aprovado') {
+            return true;
         }
 
-        // Estudante e Intercambista: apenas aprovadas
+        // Professor vê as suas + aprovadas (públicas ou por convite se foi convidado)
+        if (!empty($user->num_processo) && strtoupper(trim($user->num_processo)[0]) === 'P') {
+            return $evento->created_by === $user->id || 
+                   ($evento->status === 'aprovado' && ($evento->is_public || $foiConvidado));
+        }
+
+        // Estudante e Intercambista: apenas aprovadas (públicas ou por convite se foi convidado)
         $primeiroChar = !empty($user->num_processo) ? strtoupper(trim($user->num_processo)[0]) : '';
         if (in_array($primeiroChar, ['E', 'I'])) {
-            return $evento->status === 'aprovado';
+            return $evento->status === 'aprovado' && ($evento->is_public || $foiConvidado);
         }
 
-        // Fallback: se não conseguir determinar o cargo, permite ver se estiver aprovado
-        return $evento->status === 'aprovado';
+        // Fallback: se não conseguir determinar o cargo, permite ver se estiver aprovado e for público ou se foi convidado
+        return $evento->status === 'aprovado' && ($evento->is_public || $foiConvidado);
     }
 
     /**

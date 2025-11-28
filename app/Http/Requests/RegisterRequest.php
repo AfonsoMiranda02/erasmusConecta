@@ -24,16 +24,11 @@ class RegisterRequest extends FormRequest
     {
         $rules = [
             'nome' => ['required', 'string', 'max:255', 'unique:users,nome'],
-            'email' => ['required', 'email', 'string', 'max:255', 'unique:users,email'],
+            'email' => ['required', 'email', 'string', 'max:255', 'unique:users,email', 'ends_with:@ipvc.pt'],
             'num_processo' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'tipo' => ['required', 'string', Rule::in(['estudante', 'professor', 'intercambista'])],
         ];
-
-        // Validação específica para email institucional (estudante/professor)
-        if (in_array($this->input('tipo'), ['estudante', 'professor'])) {
-            $rules['email'][] = 'ends_with:@ipvc.pt';
-        }
 
         // Validação para intercambista (código ou documento)
         if ($this->input('tipo') === 'intercambista') {
@@ -80,7 +75,7 @@ class RegisterRequest extends FormRequest
             'email.required' => 'O campo e-mail é obrigatório.',
             'email.email' => 'Por favor, insira um e-mail válido.',
             'email.unique' => 'Este e-mail já está registado.',
-            'email.ends_with' => 'Estudantes e professores devem usar um e-mail institucional (@ipvc.pt).',
+            'email.ends_with' => 'Deves usar um e-mail institucional (@ipvc.pt).',
             'num_processo.required' => 'O campo número de processo é obrigatório.',
             'password.required' => 'O campo palavra-passe é obrigatório.',
             'password.min' => 'A palavra-passe deve ter pelo menos 8 caracteres.',

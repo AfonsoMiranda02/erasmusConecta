@@ -41,12 +41,31 @@
             <!-- Atividades / Mobilidades -->
             <a 
                 href="{{ route('atividades.index') }}" 
-                class="flex items-center px-3 py-2.5 rounded-md transition-colors {{ in_array($currentRoute, ['atividades.index', 'atividades.show']) ? 'bg-blue-50 text-teal-700 border-l-2 border-teal-600' : 'text-gray-700 hover:bg-gray-100 hover:text-teal-700' }}"
+                class="flex items-center px-3 py-2.5 rounded-md transition-colors {{ in_array($currentRoute, ['atividades.index', 'atividades.show', 'atividades.create', 'atividades.edit']) ? 'bg-blue-50 text-teal-700 border-l-2 border-teal-600' : 'text-gray-700 hover:bg-gray-100 hover:text-teal-700' }}"
             >
                 <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span class="text-sm font-medium">Atividades</span>
+            </a>
+
+            <!-- Convites Recebidos -->
+            <a 
+                href="{{ route('convites.index') }}" 
+                class="flex items-center px-3 py-2.5 rounded-md transition-colors {{ $currentRoute === 'convites.index' ? 'bg-blue-50 text-teal-700 border-l-2 border-teal-600' : 'text-gray-700 hover:bg-gray-100 hover:text-teal-700' }}"
+            >
+                <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span class="text-sm font-medium">Convites Recebidos</span>
+                @php
+                    $convitesPendentesCount = \App\Models\convite::where('for_user', $user->id)
+                        ->where('estado', 'pendente')
+                        ->count();
+                @endphp
+                @if($convitesPendentesCount > 0)
+                    <span class="ml-auto h-2 w-2 bg-red-500 rounded-full"></span>
+                @endif
             </a>
 
             <!-- Candidaturas Erasmus -->
