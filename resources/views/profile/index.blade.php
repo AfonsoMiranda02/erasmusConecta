@@ -43,13 +43,6 @@
                         <p class="mt-1 text-sm text-gray-800">{{ $user->num_processo }}</p>
                     </div>
 
-                    @if($user->telefone)
-                    <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Telefone</p>
-                        <p class="mt-1 text-sm text-gray-800">{{ $user->telefone }}</p>
-                    </div>
-                    @endif
-
                     <div>
                         <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Estado</p>
                         <p class="mt-1">
@@ -64,13 +57,6 @@
                             @endif
                         </p>
                     </div>
-
-                    @if($user->codigo_mobilidade)
-                    <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Código de Mobilidade</p>
-                        <p class="mt-1 text-sm text-gray-800">{{ $user->codigo_mobilidade }}</p>
-                    </div>
-                    @endif
                 </div>
             </div>
         </div>
@@ -168,7 +154,7 @@
                         <label for="telefone" class="block text-sm font-medium text-gray-700 mb-2">
                             Telefone
                         </label>
-                        <input 
+                        <input
                             id="telefone" 
                             name="telefone" 
                             type="text" 

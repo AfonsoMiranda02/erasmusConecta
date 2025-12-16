@@ -16,7 +16,18 @@
                 </svg>
                 Voltar às atividades
             </a>
-            <h1 class="text-2xl font-semibold text-gray-800 mt-2">{{ $evento->titulo }}</h1>
+            <div class="flex items-center space-x-3">
+                <h1 class="text-2xl font-semibold text-gray-800 mt-2">{{ $evento->titulo }}</h1>
+                @if($evento->is_public)
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200 mt-2">
+                        Pública
+                    </span>
+                @else
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200 mt-2">
+                        Por Convite
+                    </span>
+                @endif
+            </div>
             @if($evento->tipo)
             <p class="mt-1 text-sm text-gray-500">{{ $evento->tipo->nome }}</p>
             @endif
@@ -99,7 +110,18 @@
 
             <!-- Informações Detalhadas -->
             <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h2 class="text-base font-semibold text-gray-800 mb-4">Informações</h2>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-base font-semibold text-gray-800">Informações</h2>
+                    @if($evento->is_public)
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                            Atividade Pública
+                        </span>
+                    @else
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
+                            Atividade por Convite
+                        </span>
+                    @endif
+                </div>
                 <div class="space-y-4">
                     <div class="flex items-start">
                         <svg class="h-5 w-5 mr-3 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,7 +259,7 @@
 
         <!-- Sidebar -->
         <div class="lg:col-span-1 space-y-6">
-            <!-- Convite Recebido (para Intercambista) -->
+            <!-- Convite Recebido -->
             @if($conviteRecebido)
             <div class="bg-white border border-gray-200 rounded-lg p-6">
                 <h2 class="text-base font-semibold text-gray-800 mb-4">Convite Recebido</h2>

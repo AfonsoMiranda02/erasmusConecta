@@ -26,6 +26,8 @@ class User extends Authenticatable
         'avatar_path',
         'email_verified_at',
         'email_verification_token',
+        'prefer_email',
+        'locale',
     ];
 
     protected $hidden = ['password'];
@@ -43,6 +45,8 @@ class User extends Authenticatable
         'avatar_path' => 'string',
         'email_verified_at' => 'datetime',
         'email_verification_token' => 'string',
+        'prefer_email' => 'boolean',
+        'locale' => 'string',
     ];
 
     public function eventosCriados(){

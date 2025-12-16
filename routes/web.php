@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AtividadeController as AdminAtividadeController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\Admin\DocumentoController as AdminDocumentoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -51,6 +54,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::put('/perfil/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
     
+    // Configurações
+    Route::get('/configuracoes', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::put('/configuracoes/perfil', [SettingsController::class, 'updateProfile'])->name('settings.profile.update');
+    Route::put('/configuracoes/preferencias', [SettingsController::class, 'updatePreferences'])->name('settings.preferences.update');
+    
     // Atividades
     Route::get('/atividades', [AtividadeController::class, 'index'])->name('atividades.index');
     Route::get('/atividades/create', [AtividadeController::class, 'create'])->name('atividades.create');
@@ -71,6 +79,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/convites/{id}/reject', [ConviteController::class, 'reject'])->name('convites.reject');
     Route::delete('/convites/{id}', [ConviteController::class, 'destroy'])->name('convites.destroy');
     
+    // Documentos (apenas para estudantes em mobilidade)
+    Route::get('/documentos', [DocumentoController::class, 'index'])->name('documentos.index');
+    Route::post('/documentos', [DocumentoController::class, 'store'])->name('documentos.store');
+    Route::post('/documentos/{id}/resubmit', [DocumentoController::class, 'resubmit'])->name('documentos.resubmit');
+    
     // Área de Administração (apenas para admins)
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -83,5 +96,12 @@ Route::middleware('auth')->group(function () {
         // Gestão de Utilizadores e Atividades
         Route::resource('users', UserController::class);
         Route::resource('atividades', AdminAtividadeController::class);
+        
+        // Gestão de Documentos
+        Route::get('/documentos', [AdminDocumentoController::class, 'index'])->name('documentos.index');
+        Route::get('/documentos/{id}', [AdminDocumentoController::class, 'show'])->name('documentos.show');
+        Route::post('/documentos/{id}/approve', [AdminDocumentoController::class, 'approve'])->name('documentos.approve');
+        Route::post('/documentos/{id}/reject', [AdminDocumentoController::class, 'reject'])->name('documentos.reject');
+        Route::get('/documentos/{id}/download', [AdminDocumentoController::class, 'download'])->name('documentos.download');
     });
 });
