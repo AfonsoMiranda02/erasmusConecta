@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\NotificacaoCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class notificacoes extends Model
@@ -24,6 +25,13 @@ class notificacoes extends Model
         'titulo' => 'string',
         'mensagem' => 'string',
         'is_seen' => 'boolean',
+    ];
+
+    /**
+     * The event map for the model.
+     */
+    protected $dispatchesEvents = [
+        'created' => NotificacaoCreated::class,
     ];
 
     public function user(){

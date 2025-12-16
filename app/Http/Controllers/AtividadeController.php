@@ -6,6 +6,8 @@ use App\Models\evento;
 use App\Models\inscricao;
 use App\Models\tipo;
 use App\Models\convite;
+use App\Models\notificacoes;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -218,6 +220,18 @@ class AtividadeController extends Controller
             $evento->update(['aprovado_por' => $user->id]);
         }
 
+        // Criar notificação quando uma atividade é criada
+        try {
+            $this->criarNotificacaoAtividade($evento, $isAdmin);
+        } catch (\Exception $e) {
+            \Log::error('Erro ao criar notificação de atividade: ' . $e->getMessage(), [
+                'evento_id' => $evento->id,
+                'user_id' => $user->id,
+                'is_admin' => $isAdmin,
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+
         return redirect()->route('atividades.show', $evento->id)
             ->with('success', 'Atividade criada com sucesso!');
     }
@@ -349,6 +363,9 @@ class AtividadeController extends Controller
             'aprovado_por' => $user->id,
         ]);
 
+        // Criar notificação quando uma atividade é aprovada
+        $this->criarNotificacaoAprovacao($evento);
+
         return redirect()->route('atividades.show', $evento->id)
             ->with('success', 'Atividade aprovada com sucesso!');
     }
@@ -372,5 +389,93 @@ class AtividadeController extends Controller
 
         return redirect()->route('atividades.show', $evento->id)
             ->with('success', 'Atividade rejeitada.');
+    }
+
+    /**
+     * Cria notificação quando uma atividade é aprovada
+     */
+    private function criarNotificacaoAprovacao(evento $evento)
+    {
+        // Notificar o criador da atividade
+        notificacoes::create([
+            'user_id' => $evento->created_by,
+            'morph_type' => 'evento',
+            'morph_id' => $evento->id,
+            'titulo' => 'Atividade Aprovada',
+            'mensagem' => "A tua atividade '{$evento->titulo}' foi aprovada!",
+            'is_seen' => false,
+        ]);
+
+        // Se a atividade for pública, notificar todos os utilizadores (exceto admins e o criador)
+        if ($evento->is_public) {
+            $users = User::where('id', '!=', $evento->created_by)
+                ->get()
+                ->filter(function($user) {
+                    $primeiroChar = !empty($user->num_processo) ? strtoupper(trim($user->num_processo)[0]) : '';
+                    return $primeiroChar !== 'A';
+                });
+
+            foreach ($users as $user) {
+                notificacoes::create([
+                    'user_id' => $user->id,
+                    'morph_type' => 'evento',
+                    'morph_id' => $evento->id,
+                    'titulo' => 'Nova Atividade Disponível',
+                    'mensagem' => "Foi aprovada uma nova atividade: {$evento->titulo}",
+                    'is_seen' => false,
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Cria notificações relacionadas à criação de uma atividade
+     */
+    private function criarNotificacaoAtividade(evento $evento, bool $isAdmin)
+    {
+        \Log::info('criarNotificacaoAtividade chamado', [
+            'evento_id' => $evento->id,
+            'is_admin' => $isAdmin,
+            'status' => $evento->status,
+            'is_public' => $evento->is_public,
+            'created_by' => $evento->created_by,
+        ]);
+
+        // Sempre notificar o criador da atividade
+        $notificacao = notificacoes::create([
+            'user_id' => $evento->created_by,
+            'morph_type' => 'evento',
+            'morph_id' => $evento->id,
+            'titulo' => $isAdmin ? 'Atividade Criada e Aprovada' : 'Atividade Criada',
+            'mensagem' => $isAdmin 
+                ? "A tua atividade '{$evento->titulo}' foi criada e aprovada automaticamente."
+                : "A tua atividade '{$evento->titulo}' foi criada e está aguardando aprovação.",
+            'is_seen' => false,
+        ]);
+        \Log::info('Notificação criada para o criador', ['notificacao_id' => $notificacao->id, 'user_id' => $evento->created_by]);
+
+        // Se for admin e a atividade for pública e aprovada, notificar também todos os utilizadores
+        if ($isAdmin && $evento->status === 'aprovado' && $evento->is_public) {
+            $users = User::where('id', '!=', $evento->created_by)
+                ->get()
+                ->filter(function($user) {
+                    $primeiroChar = !empty($user->num_processo) ? strtoupper(trim($user->num_processo)[0]) : '';
+                    return $primeiroChar !== 'A';
+                });
+
+            \Log::info('Notificando utilizadores adicionais (admin)', ['count' => $users->count()]);
+
+            foreach ($users as $user) {
+                $notificacao = notificacoes::create([
+                    'user_id' => $user->id,
+                    'morph_type' => 'evento',
+                    'morph_id' => $evento->id,
+                    'titulo' => 'Nova Atividade Disponível',
+                    'mensagem' => "Foi criada uma nova atividade: {$evento->titulo}",
+                    'is_seen' => false,
+                ]);
+                \Log::info('Notificação criada para utilizador', ['notificacao_id' => $notificacao->id, 'user_id' => $user->id]);
+            }
+        }
     }
 }

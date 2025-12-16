@@ -67,7 +67,7 @@
                 </div>
                 <div class="ml-4 flex-1">
                     <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Mensagens por ler</p>
-                    <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['mensagens_nao_lidas'] }}</p>
+                    <p id="unreadMessagesCount" class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['mensagens_nao_lidas'] }}</p>
                 </div>
             </div>
         </div>

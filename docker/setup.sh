@@ -57,4 +57,3 @@ echo "      - Senha: root"
 echo "   3. Para executar os seeders: docker-compose exec app php artisan db:seed"
 echo "   4. Para desenvolvimento com Vite: docker-compose exec node npm run dev"
 echo ""
-

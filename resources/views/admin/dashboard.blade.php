@@ -86,6 +86,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- Mensagens por Ler -->
+        <div class="bg-white border border-gray-200 rounded-lg p-5 hover:border-teal-300 transition-colors">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 bg-blue-50 rounded-lg p-2.5">
+                    <svg class="h-5 w-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div class="ml-4 flex-1">
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Mensagens por ler</p>
+                    <p id="unreadMessagesCount" class="mt-1 text-2xl font-semibold text-gray-900">{{ $mensagensNaoLidas }}</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Stats Cards - Atividades -->
