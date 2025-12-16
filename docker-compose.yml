@@ -86,6 +86,24 @@ services:
     depends_on:
       - app
 
+  # LaravelEcho Server
+  echo:
+    image: node:20-alpine
+    container_name: erasmus_conecta_echo
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./laravel-echo-server.json:/var/www/html/laravel-echo-server.json
+    ports:
+      - "6001:6001"
+    networks:
+      - erasmus_conecta_network
+    command: sh -c "npm install -g laravel-echo-server && laravel-echo-server start --force"
+    depends_on:
+      - redis
+      - nginx
+
   # phpMyAdmin Service
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest

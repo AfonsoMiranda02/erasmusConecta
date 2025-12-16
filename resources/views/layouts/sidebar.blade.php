@@ -103,7 +103,9 @@
                     $unreadCount = \App\Models\notificacoes::where('user_id', $user->id)->where('is_seen', false)->count();
                 @endphp
                 @if($unreadCount > 0)
-                    <span class="ml-auto bg-red-100 text-red-700 text-xs font-semibold px-1.5 py-0.5 rounded-full border border-red-200">{{ $unreadCount }}</span>
+                    <span id="sidebarUnreadCount" class="ml-auto bg-red-100 text-red-700 text-xs font-semibold px-1.5 py-0.5 rounded-full border border-red-200">{{ $unreadCount }}</span>
+                @else
+                    <span id="sidebarUnreadCount" class="ml-auto bg-red-100 text-red-700 text-xs font-semibold px-1.5 py-0.5 rounded-full border border-red-200 hidden">0</span>
                 @endif
             </a>
 

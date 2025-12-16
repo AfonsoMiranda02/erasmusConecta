@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\evento;
 use App\Models\convite;
+use App\Models\notificacoes;
 use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
@@ -40,6 +41,11 @@ class AdminDashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Mensagens não lidas do admin
+        $mensagensNaoLidas = notificacoes::where('user_id', $user->id)
+            ->where('is_seen', false)
+            ->count();
+
         return view('admin.dashboard', compact(
             'user',
             'totalUsers',
@@ -51,7 +57,8 @@ class AdminDashboardController extends Controller
             'totalAtividadesPublic',
             'totalAtividadesPrivadas',
             'atividadesRecentes',
-            'convitesPendentes'
+            'convitesPendentes',
+            'mensagensNaoLidas'
         ));
     }
 }

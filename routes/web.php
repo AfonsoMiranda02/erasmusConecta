@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AtividadeController as AdminAtividadeController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\EmailVerificationController;
+use App\Http\Controllers\PushNotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -70,6 +71,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/convites/{id}/accept', [ConviteController::class, 'accept'])->name('convites.accept');
     Route::post('/convites/{id}/reject', [ConviteController::class, 'reject'])->name('convites.reject');
     Route::delete('/convites/{id}', [ConviteController::class, 'destroy'])->name('convites.destroy');
+    
+    // Push Notifications
+    Route::post('/push/subscribe', [PushNotificationController::class, 'subscribe'])->name('push.subscribe');
+    Route::post('/push/unsubscribe', [PushNotificationController::class, 'unsubscribe'])->name('push.unsubscribe');
+    Route::get('/notifications', [PushNotificationController::class, 'getNotifications'])->name('notifications.index');
+    Route::get('/notifications/unread-count', [PushNotificationController::class, 'getUnreadCount'])->name('notifications.unread-count');
+    Route::post('/notifications/{id}/read', [PushNotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [PushNotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     
     // Área de Administração (apenas para admins)
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {

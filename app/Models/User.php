@@ -77,6 +77,10 @@ class User extends Authenticatable
         return $this->hasMany(notificacoes::class, 'user_id');
     }
 
+    public function pushSubscriptions(){
+        return $this->hasMany(PushSubscription::class, 'user_id');
+    }
+
     /**
      * Obtém a URL do avatar ou retorna null
      */
