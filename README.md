@@ -60,48 +60,6 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-## 🐳 Docker Setup
-
-Este projeto está configurado para rodar com Docker!
-
-### Início Rápido
-
-1. **Copie o arquivo de ambiente:**
-   ```powershell
-   cc
-   ```
-
-2. **Inicie os containers:**
-   ```powershell
-   docker-compose up -d
-   ```
-
-3. **Instale as dependências e configure:**
-   ```powershell
-   docker-compose exec app composer install
-   docker-compose exec node npm install
-   docker-compose exec app php artisan key:generate
-   docker-compose exec app php artisan migrate
-   ```
-
-4. **Acesse a aplicação:**
-   - 🌐 **Laravel**: http://localhost:8080
-   - 🗄️ **phpMyAdmin**: http://localhost:8081 (usuário: `root`, senha: `root`)
-
-### 📚 Documentação Completa
-
-- **Guia Completo**: Veja [DOCKER-GUIA.md](DOCKER-GUIA.md) para instruções detalhadas
-- **Documentação Técnica**: Veja [docker/README.md](docker/README.md) para mais detalhes
-
-### 🚀 Script Automático
-
-Para setup automático no Windows:
-```powershell
-.\docker\setup.ps1
-```
-
-BY Fosforo and Miranda.
-
 
 # When Creating a User Paste this:
 ```php

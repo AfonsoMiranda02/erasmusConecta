@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AtividadeController;
 use App\Http\Controllers\ConviteController;
+use App\Http\Controllers\MensagensController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\EscolaController;
 use App\Http\Controllers\Admin\CursoController;
@@ -72,6 +73,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/convites/{id}/reject', [ConviteController::class, 'reject'])->name('convites.reject');
     Route::delete('/convites/{id}', [ConviteController::class, 'destroy'])->name('convites.destroy');
     
+    // Mensagens
+    Route::get('/mensagens', [MensagensController::class, 'index'])->name('mensagens.index');
+    Route::get('/mensagens/{id}', [MensagensController::class, 'show'])->name('mensagens.show');
+
     // Push Notifications
     Route::post('/push/subscribe', [PushNotificationController::class, 'subscribe'])->name('push.subscribe');
     Route::post('/push/unsubscribe', [PushNotificationController::class, 'unsubscribe'])->name('push.unsubscribe');

@@ -33,9 +33,14 @@
 
             <!-- Right side: User info -->
             <div class="flex items-center space-x-4 ml-auto">
-                <span class="material-symbols-outlined" id="enableNotifications" title="Notificações">
-                    notifications
-                </span>
+                <!-- Notification icon with badge -->
+                <div class="relative cursor-pointer inline-flex items-center" id="notificationIconContainer">
+                    <span class="material-symbols-outlined" id="enableNotifications" title="Notificações">
+                        notifications
+                    </span>
+                    <!-- Red dot badge for unread notifications -->
+                    <span id="notificationBadge" class="absolute -top-0.5 -right-0.5 h-3 w-3 bg-red-500 rounded-full border-2 border-white hidden"></span>
+                </div>
     @php
     if (!isset($convites_recentes)) {
         $convites_recentes = \App\Models\convite::where('for_user', Auth::id())
@@ -213,7 +218,7 @@
                 @endforelse
 
                 @forelse($notificacoes_recentes->take(5) as $notificacao)
-                    <div class="p-4 hover:bg-gray-50 transition-colors notification-item {{ !$notificacao->is_seen ? 'bg-blue-50' : '' }}" data-id="{{ $notificacao->id }}">
+                    <a href="{{ route('mensagens.show', $notificacao->id) }}" class="block p-4 hover:bg-gray-50 transition-colors notification-item {{ !$notificacao->is_seen ? 'bg-blue-50' : '' }}" data-id="{{ $notificacao->id }}">
                         <div class="flex items-start">
                             <div class="flex-shrink-0">
                                 <div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
@@ -231,7 +236,7 @@
                                 <span class="ml-2 h-2 w-2 bg-teal-400 rounded-full"></span>
                             @endif
                         </div>
-                    </div>
+                    </a>
                 @empty
                     @if($convites_recentes->isEmpty())
                         <div class="p-4 text-center text-sm text-gray-500">
@@ -239,6 +244,12 @@
                         </div>
                     @endif
                 @endforelse
+            </div>
+            <!-- Botão Ver mais -->
+            <div class="px-4 py-3 border-t border-gray-200 bg-gray-50">
+                <a href="{{ route('mensagens.index') }}" class="block text-center text-sm font-medium text-teal-600 hover:text-teal-700 transition-colors">
+                    Ver todas as mensagens →
+                </a>
             </div>
         </div>
     </div>
@@ -279,6 +290,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const icon = document.getElementById("enableNotifications");
+    const notificationIconContainer = document.getElementById("notificationIconContainer");
     const modal = document.getElementById("notificationsModal");
     const notificationsList = document.getElementById("notificationsList");
 
@@ -295,24 +307,84 @@ document.addEventListener("DOMContentLoaded", () => {
             
             if (!list) return;
 
-            // Limpar apenas notificações dinâmicas (não as do blade)
+            // Remover apenas notificações dinâmicas (criadas via JavaScript)
+            // Preservar convites e notificações do Blade
             const dynamicItems = list.querySelectorAll('.notification-item[data-dynamic="true"]');
             dynamicItems.forEach(item => item.remove());
+            
+            // Atualizar indicadores das notificações do Blade baseado no estado real da API
+            const bladeNotifications = list.querySelectorAll('.notification-item:not([data-dynamic="true"])');
+            bladeNotifications.forEach(item => {
+                const notificationId = item.getAttribute('data-id');
+                if (notificationId) {
+                    // Encontrar a notificação correspondente na resposta da API
+                    const apiNotification = notifications.find(n => n.id == notificationId);
+                    if (apiNotification) {
+                        const indicator = item.querySelector('.bg-teal-400');
+                        // Se a notificação está lida na API, remover indicador
+                        if (apiNotification.is_seen) {
+                            if (indicator) indicator.classList.add('hidden');
+                            item.classList.remove('bg-blue-50');
+                        } else {
+                            // Se não está lida, garantir que o indicador está visível
+                            if (indicator) indicator.classList.remove('hidden');
+                            if (!item.classList.contains('bg-blue-50')) {
+                                item.classList.add('bg-blue-50');
+                            }
+                        }
+                    }
+                }
+            });
 
-            // Adicionar novas notificações se houver
-            if (notifications.length === 0 && list.querySelectorAll('.notification-item').length === 0) {
+            // Adicionar notificações da API (após os convites)
+            if (notifications.length > 0) {
+                notifications.forEach(notif => {
+                    const el = document.createElement('a');
+                    el.href = `/mensagens/${notif.id}`;
+                    el.className = 'block p-4 hover:bg-gray-50 transition-colors notification-item';
+                    el.setAttribute('data-id', notif.id);
+                    el.setAttribute('data-dynamic', 'true');
+                    
+                    // Remover indicador de não lida se já foi lida
+                    const indicatorClass = notif.is_seen ? 'hidden' : '';
+                    
+                    el.innerHTML = `
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                                    <svg class="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <p class="text-sm font-medium text-gray-800">${notif.titulo || 'Notificação'}</p>
+                                <p class="text-xs text-gray-500 mt-1">${notif.mensagem || ''}</p>
+                                <p class="text-xs text-gray-400 mt-1">${notif.created_at || ''}</p>
+                            </div>
+                            <span class="ml-2 h-2 w-2 bg-teal-400 rounded-full ${indicatorClass}"></span>
+                        </div>
+                    `;
+                    
+                    list.appendChild(el);
+                });
+            }
+            
+            // Se não houver nenhum item na lista (nem convites, nem notificações)
+            if (list.children.length === 0) {
                 list.innerHTML = '<div class="p-4 text-center text-sm text-gray-500">Não há atividades recentes.</div>';
             }
         } catch (err) {
-            console.error(err);
+            console.error('Erro ao carregar notificações:', err);
             const list = document.getElementById("notificationsList");
-            if (list && list.querySelectorAll('.notification-item').length === 0) {
+            if (list && list.children.length === 0) {
                 list.innerHTML = '<div class="p-4 text-center text-sm text-red-500">Não foi possível carregar as notificações.</div>';
             }
         }
     }
 
-    icon.addEventListener("click", async () => {
+    // Adicionar evento de clique no container ou no ícone
+    const handleNotificationClick = async () => {
 
         if (!alreadyEnabled) {
             const permission = await Notification.requestPermission();
@@ -345,7 +417,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         modal.style.display = "flex";
         loadNotifications();
-    });
+    };
+
+    // Adicionar event listeners tanto no container quanto no ícone
+    if (notificationIconContainer) {
+        notificationIconContainer.addEventListener("click", handleNotificationClick);
+    }
+    if (icon) {
+        icon.addEventListener("click", handleNotificationClick);
+    }
 
     modal.addEventListener("click", (e) => {
         if (e.target === modal) modal.style.display = "none";
@@ -354,24 +434,48 @@ document.addEventListener("DOMContentLoaded", () => {
     // Marcar todas como lidas
     const markAllReadBtn = document.getElementById("markAllReadBtn");
     if (markAllReadBtn) {
-        markAllReadBtn.addEventListener("click", async () => {
+        markAllReadBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
             try {
                 const res = await fetch("/notifications/read-all", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name=csrf-token]').content
+                        "X-CSRF-TOKEN": document.querySelector('meta[name=csrf-token]').content,
+                        "X-Requested-With": "XMLHttpRequest"
                     }
                 });
-                if (res.ok) {
-                    loadNotifications();
-                    // Atualizar contador após marcar todas como lidas
+                
+                const data = await res.json();
+                
+                if (res.ok && data.success) {
+                    // Remover indicadores de não lidas de todas as notificações na lista
+                    const list = document.getElementById("notificationsList");
+                    if (list) {
+                        // Remover indicadores (pontos azuis) de todas as notificações
+                        const indicators = list.querySelectorAll('.bg-teal-400');
+                        indicators.forEach(indicator => {
+                            indicator.classList.add('hidden');
+                        });
+                        
+                        // Remover classe bg-blue-50 (destaque de não lida) dos itens
+                        const unreadItems = list.querySelectorAll('.notification-item.bg-blue-50');
+                        unreadItems.forEach(item => {
+                            item.classList.remove('bg-blue-50');
+                        });
+                    }
+                    
+                    // Atualizar contador
                     if (typeof window.updateUnreadCount === 'function') {
                         window.updateUnreadCount();
                     }
+                } else {
+                    console.error('Erro ao marcar todas como lidas:', data.message);
                 }
             } catch (err) {
-                console.error(err);
+                console.error('Erro ao marcar todas como lidas:', err);
             }
         });
     }
@@ -488,6 +592,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     const unreadCount = data.count || 0;
                     console.log('Contagem de não lidas:', unreadCount);
                     
+                    // Atualizar bolinha vermelha no ícone do sino
+                    const notificationBadge = document.getElementById('notificationBadge');
+                    if (notificationBadge) {
+                        if (unreadCount > 0) {
+                            notificationBadge.classList.remove('hidden');
+                            console.log('Bolinha vermelha no sino: visível');
+                        } else {
+                            notificationBadge.classList.add('hidden');
+                            console.log('Bolinha vermelha no sino: oculta');
+                        }
+                    }
+                    
                     // Atualizar contador na dashboard
                     const dashboardCount = document.getElementById('unreadMessagesCount');
                     if (dashboardCount) {
@@ -528,6 +644,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         .then(res => res.json())
                         .then(notifications => {
                             const unreadCount = notifications.filter(n => !n.is_seen).length;
+                            
+                            // Atualizar bolinha vermelha no ícone do sino
+                            const notificationBadge = document.getElementById('notificationBadge');
+                            if (notificationBadge) {
+                                if (unreadCount > 0) {
+                                    notificationBadge.classList.remove('hidden');
+                                } else {
+                                    notificationBadge.classList.add('hidden');
+                                }
+                            }
+                            
                             const dashboardCount = document.getElementById('unreadMessagesCount');
                             if (dashboardCount) {
                                 dashboardCount.textContent = unreadCount;
@@ -562,8 +689,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     const emptyMsg = list.querySelector('.text-center.text-sm.text-gray-500');
                     if (emptyMsg) emptyMsg.remove();
 
-                    const el = document.createElement('div');
-                    el.className = 'p-4 hover:bg-gray-50 transition-colors notification-item bg-blue-50';
+                    const el = document.createElement('a');
+                    el.href = `/mensagens/${e.id}`;
+                    el.className = 'block p-4 hover:bg-gray-50 transition-colors notification-item bg-blue-50';
                     el.setAttribute('data-id', e.id);
                     el.setAttribute('data-dynamic', 'true');
                     el.innerHTML = `
@@ -631,6 +759,17 @@ document.addEventListener("DOMContentLoaded", () => {
                         .listen('.NotificacaoCreated', handleNotification);
                     
                     console.log('✅ Subscrito ao canal user.' + userId);
+                }
+            }
+            
+            // Inicializar bolinha vermelha baseado nas notificações do Blade
+            const initialUnreadCount = {{ $notificacoes_recentes->where('is_seen', false)->count() }};
+            const notificationBadge = document.getElementById('notificationBadge');
+            if (notificationBadge) {
+                if (initialUnreadCount > 0) {
+                    notificationBadge.classList.remove('hidden');
+                } else {
+                    notificationBadge.classList.add('hidden');
                 }
             }
             

@@ -92,7 +92,7 @@
 
             <!-- Mensagens / Contactos -->
             <a 
-                href="#" 
+                href="{{ route('mensagens.index') }}" 
                 class="flex items-center px-3 py-2.5 rounded-md transition-colors text-gray-700 hover:bg-gray-100 hover:text-teal-700"
             >
                 <svg class="h-5 w-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
