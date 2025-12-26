@@ -63,5 +63,10 @@ return [
         'max_participants' => 'Maximum Participants',
         'status' => 'Status',
     ],
+    
+    'already_registered' => 'Already registered',
+    'available' => 'Available',
+    'created_by' => 'Created by',
+    'approved_by' => 'Approved by',
 ];
 

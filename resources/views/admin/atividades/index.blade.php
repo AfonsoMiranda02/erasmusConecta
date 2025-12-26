@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'Gestão de Atividades')
+@section('title', __('admin.activities.title'))
 
 @section('content')
 <div class="space-y-8">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-800">Gestão de Atividades</h1>
-            <p class="mt-1 text-sm text-gray-500">Gerir todas as atividades do sistema</p>
+            <h1 class="text-2xl font-semibold text-gray-800">{{ __('admin.activities.title') }}</h1>
+            <p class="mt-1 text-sm text-gray-500">{{ __('admin.activities.subtitle') }}</p>
         </div>
         <a 
             href="{{ route('admin.atividades.create') }}" 
@@ -18,7 +18,7 @@
                 <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Nova Atividade
+                {{ __('admin.activities.create_button') }}
             </span>
         </a>
     </div>

@@ -77,5 +77,8 @@ return [
     'user' => 'Utilizador',
     'event_not_found' => 'Evento não encontrado',
     'note' => 'Nota',
+    'not_found' => 'Não encontrado',
+    'not_available' => 'N/A',
+    'all' => 'Todos',
 ];
 

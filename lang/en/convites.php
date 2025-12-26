@@ -28,5 +28,14 @@ return [
         'description_placeholder' => 'Invitation description...',
         'for_user' => 'To',
     ],
+    
+    'manage_invitations' => 'Manage your activity invitations',
+    'filter_by_status' => 'Filter by status:',
+    'date_time' => 'Date and Time',
+    'location' => 'Location',
+    'invited_by' => 'Invited by',
+    'received_on' => 'Received on',
+    'activity_description' => 'Activity Description',
+    'view_activity' => 'View activity',
 ];
 

@@ -254,7 +254,7 @@
                     <!-- Confirmar Password -->
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                            Confirmar nova palavra-passe <span class="text-red-500">*</span>
+                            {{ __('profile.password.confirm') }} <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -268,7 +268,7 @@
                                 type="password" 
                                 required
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                                placeholder="Repetir palavra-passe"
+                                placeholder="{{ __('profile.password.confirm_placeholder') }}"
                             >
                         </div>
                     </div>
@@ -279,7 +279,7 @@
                             type="submit"
                             class="px-6 py-3 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                         >
-                            Atualizar palavra-passe
+                            {{ __('profile.password.update') }}
                         </button>
                     </div>
                 </form>

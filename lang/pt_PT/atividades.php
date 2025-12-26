@@ -63,5 +63,10 @@ return [
         'max_participants' => 'Máximo de Participantes',
         'status' => 'Estado',
     ],
+    
+    'already_registered' => 'Já estás inscrito',
+    'available' => 'Disponível',
+    'created_by' => 'Criado por',
+    'approved_by' => 'Aprovado por',
 ];
 
