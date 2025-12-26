@@ -16,6 +16,7 @@ use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DocumentoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -81,6 +82,11 @@ Route::middleware('auth')->group(function () {
     // Mensagens
     Route::get('/mensagens', [MensagensController::class, 'index'])->name('mensagens.index');
     Route::get('/mensagens/{id}', [MensagensController::class, 'show'])->name('mensagens.show');
+
+    // Documentos
+    Route::get('/documentos', [DocumentoController::class, 'index'])->name('documentos.index');
+    Route::post('/documentos', [DocumentoController::class, 'store'])->name('documentos.store');
+    Route::post('/documentos/{id}/resubmit', [DocumentoController::class, 'resubmit'])->name('documentos.resubmit');
 
     // Push Notifications
     Route::post('/push/subscribe', [PushNotificationController::class, 'subscribe'])->name('push.subscribe');
