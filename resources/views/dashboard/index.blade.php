@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', __('dashboard.title'))
 
 @section('content')
 <div class="space-y-8">
     <!-- Page Header -->
     <div class="mb-8">
-        <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
-        <p class="mt-1 text-sm text-gray-500">Bem-vindo de volta, {{ Auth::user()->nome }}!</p>
+        <h1 class="text-2xl font-semibold text-gray-800">{{ __('dashboard.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-500">{{ __('dashboard.welcome', ['name' => Auth::user()->nome]) }}</p>
     </div>
 
     <!-- Stats Cards -->
@@ -21,7 +21,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Atividades em curso</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('dashboard.stats.activities_ongoing') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['atividades_em_curso'] }}</p>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Candidaturas submetidas</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('dashboard.stats.applications_submitted') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['candidaturas_submetidas'] }}</p>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Candidaturas aprovadas</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('dashboard.stats.applications_approved') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['candidaturas_aprovadas'] }}</p>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Mensagens por ler</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('dashboard.stats.unread_messages') }}</p>
                     <p id="unreadMessagesCount" class="mt-1 text-2xl font-semibold text-gray-900">{{ $stats['mensagens_nao_lidas'] }}</p>
                 </div>
             </div>
@@ -76,7 +76,7 @@
     <!-- Acessos Rápidos -->
     <div class="bg-white border border-gray-200 rounded-lg mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-base font-semibold text-gray-800">Acessos Rápidos</h2>
+            <h2 class="text-base font-semibold text-gray-800">{{ __('dashboard.quick_access.title') }}</h2>
         </div>
         <div class="p-6">
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -87,8 +87,8 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">Nova candidatura</p>
-                        <p class="text-xs text-gray-500 mt-0.5">Submeter nova candidatura</p>
+                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">{{ __('dashboard.quick_access.new_application') }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ __('dashboard.quick_access.new_application_desc') }}</p>
                     </div>
                 </a>
 
@@ -99,8 +99,8 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">Ver atividades</p>
-                        <p class="text-xs text-gray-500 mt-0.5">Explorar atividades disponíveis</p>
+                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">{{ __('dashboard.quick_access.view_activities') }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ __('dashboard.quick_access.view_activities_desc') }}</p>
                     </div>
                 </a>
 
@@ -111,8 +111,8 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">Instituições parceiras</p>
-                        <p class="text-xs text-gray-500 mt-0.5">Consultar instituições</p>
+                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">{{ __('dashboard.quick_access.partner_institutions') }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ __('dashboard.quick_access.partner_institutions_desc') }}</p>
                     </div>
                 </a>
             </div>
@@ -124,7 +124,7 @@
         <!-- Candidaturas Recentes -->
         <div class="bg-white border border-gray-200 rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-base font-semibold text-gray-800">Candidaturas Recentes</h2>
+                <h2 class="text-base font-semibold text-gray-800">{{ __('dashboard.recent.applications') }}</h2>
             </div>
             <div class="divide-y divide-gray-200">
                 @forelse($inscricoes_recentes as $inscricao)
@@ -132,24 +132,24 @@
                         <div class="flex items-center justify-between">
                             <div class="flex-1">
                                 <p class="text-sm font-medium text-gray-800">
-                                    {{ $inscricao->evento->titulo ?? 'Evento não encontrado' }}
+                                    {{ $inscricao->evento->titulo ?? __('common.event_not_found') }}
                                 </p>
                                 <p class="text-xs text-gray-500 mt-1">
-                                    Submetida em {{ $inscricao->created_at->format('d/m/Y H:i') }}
+                                    {{ __('dashboard.recent.submitted_on', ['date' => $inscricao->created_at->format('d/m/Y H:i')]) }}
                                 </p>
                             </div>
                             <div>
                                 @if($inscricao->estado === 'aprovada')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                                        Aprovada
+                                        {{ __('dashboard.status.approved') }}
                                     </span>
                                 @elseif($inscricao->estado === 'pendente')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
-                                        Pendente
+                                        {{ __('dashboard.status.pending') }}
                                     </span>
                                 @elseif($inscricao->estado === 'rejeitada')
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-red-700 border border-red-200">
-                                        Rejeitada
+                                        {{ __('dashboard.status.rejected') }}
                                     </span>
                                 @else
                                     <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-50 text-gray-700 border border-gray-200">
@@ -161,7 +161,7 @@
                     </div>
                 @empty
                     <div class="p-4 text-center text-sm text-gray-500">
-                        Ainda não tens candidaturas submetidas.
+                        {{ __('dashboard.recent.no_applications') }}
                     </div>
                 @endforelse
             </div>
@@ -170,7 +170,7 @@
         <!-- Convites e Notificações -->
         <div class="bg-white border border-gray-200 rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-base font-semibold text-gray-800">Atividades Recentes</h2>
+                <h2 class="text-base font-semibold text-gray-800">{{ __('dashboard.recent.activities') }}</h2>
             </div>
             <div class="divide-y divide-gray-200 max-h-96 overflow-y-auto">
                 @forelse($convites_recentes->take(3) as $convite)
@@ -189,12 +189,12 @@
                                 <p class="text-xs text-gray-600 mt-1 italic">{{ $convite->descricao }}</p>
                                 @endif
                                 <p class="text-xs text-gray-500 mt-1">
-                                    De {{ $convite->remetente->nome ?? 'Utilizador' }} • {{ $convite->created_at->diffForHumans() }}
+                                    {{ __('dashboard.recent.from', ['name' => $convite->remetente->nome ?? __('common.user')]) }} • {{ $convite->created_at->diffForHumans() }}
                                 </p>
                             </div>
                             @if($convite->estado === 'pendente')
                                 <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
-                                    Novo
+                                    {{ __('dashboard.recent.new') }}
                                 </span>
                             @endif
                         </div>
@@ -225,7 +225,7 @@
                 @empty
                     @if($convites_recentes->isEmpty())
                         <div class="p-4 text-center text-sm text-gray-500">
-                            Não há atividades recentes.
+                            {{ __('dashboard.recent.no_activities') }}
                         </div>
                     @endif
                 @endforelse
@@ -237,7 +237,7 @@
     @if($eventos_proximos->isNotEmpty())
     <div class="bg-white border border-gray-200 rounded-lg mt-6">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-base font-semibold text-gray-800">Eventos Próximos</h2>
+            <h2 class="text-base font-semibold text-gray-800">{{ __('dashboard.upcoming_events') }}</h2>
         </div>
         <div class="divide-y divide-gray-200">
             @foreach($eventos_proximos as $evento)
@@ -264,7 +264,7 @@
                             </div>
                         </div>
                         <a href="#" class="ml-4 text-sm text-teal-600 hover:text-teal-700 font-medium">
-                            Ver detalhes
+                            {{ __('dashboard.recent.view_details') }}
                         </a>
                     </div>
                 </div>

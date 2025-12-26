@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard Admin')
+@section('title', __('admin.dashboard.title'))
 
 @section('content')
 <div class="space-y-8">
     <!-- Page Header -->
     <div class="mb-8">
-        <h1 class="text-2xl font-semibold text-gray-800">Dashboard de Administração</h1>
-        <p class="mt-1 text-sm text-gray-500">Visão geral do sistema ErasmusConecta</p>
+        <h1 class="text-2xl font-semibold text-gray-800">{{ __('admin.dashboard.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-500">{{ __('admin.dashboard.subtitle') }}</p>
     </div>
 
     <!-- Stats Cards - Utilizadores -->
@@ -21,7 +21,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Utilizadores</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.dashboard.stats.total_users') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $totalUsers }}</p>
                 </div>
             </div>
@@ -36,7 +36,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Admins</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.dashboard.stats.admins') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $totalAdmins }}</p>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Professores</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.dashboard.stats.professors') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $totalProfessores }}</p>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Intercambistas</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.dashboard.stats.intercambistas') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $totalIntercambistas }}</p>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Estudantes</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.dashboard.stats.students') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $totalEstudantes }}</p>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                     </svg>
                 </div>
                 <div class="ml-4 flex-1">
-                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Atividades</p>
+                    <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('admin.dashboard.stats.total_activities') }}</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900">{{ $totalAtividades }}</p>
                 </div>
             </div>
@@ -155,7 +155,7 @@
     <!-- Acessos Rápidos -->
     <div class="bg-white border border-gray-200 rounded-lg mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-base font-semibold text-gray-800">Acessos Rápidos</h2>
+            <h2 class="text-base font-semibold text-gray-800">{{ __('admin.dashboard.quick_access.title') }}</h2>
         </div>
         <div class="p-6">
             <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -167,8 +167,8 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">Gestão de Utilizadores</p>
-                        <p class="text-xs text-gray-500 mt-0.5">Gerir utilizadores do sistema</p>
+                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">{{ __('admin.dashboard.quick_access.manage_users') }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ __('admin.dashboard.quick_access.manage_users_desc') }}</p>
                     </div>
                 </a>
 
@@ -180,8 +180,8 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">Gestão de Atividades</p>
-                        <p class="text-xs text-gray-500 mt-0.5">Ver e gerir todas as atividades</p>
+                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">{{ __('admin.dashboard.quick_access.manage_activities') }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ __('admin.dashboard.quick_access.manage_activities_desc') }}</p>
                     </div>
                 </a>
 
@@ -193,8 +193,8 @@
                         </svg>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">Gestão de Convites</p>
-                        <p class="text-xs text-gray-500 mt-0.5">Ver e gerir convites</p>
+                        <p class="text-sm font-medium text-gray-800 group-hover:text-teal-700">{{ __('admin.dashboard.quick_access.manage_invitations') }}</p>
+                        <p class="text-xs text-gray-500 mt-0.5">{{ __('admin.dashboard.quick_access.manage_invitations_desc') }}</p>
                     </div>
                 </a>
             </div>

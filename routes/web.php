@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AtividadeController as AdminAtividadeController;
 use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\PushNotificationController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -52,6 +53,10 @@ Route::middleware('auth')->group(function () {
     Route::put('/perfil', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/perfil/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::put('/perfil/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+    
+    // Configurações
+    Route::get('/configuracoes', [SettingsController::class, 'edit'])->name('settings.edit');
+    Route::put('/configuracoes/preferencias', [SettingsController::class, 'updatePreferences'])->name('settings.preferences.update');
     
     // Atividades
     Route::get('/atividades', [AtividadeController::class, 'index'])->name('atividades.index');

@@ -3,14 +3,14 @@
 @endphp
 @extends('layouts.app')
 
-@section('title', 'O meu Perfil')
+@section('title', __('profile.title'))
 
 @section('content')
 <div class="space-y-8">
     <!-- Page Header -->
     <div>
-        <h1 class="text-2xl font-semibold text-gray-800">O meu Perfil</h1>
-        <p class="mt-1 text-sm text-gray-500">Gerir as tuas informações pessoais</p>
+        <h1 class="text-2xl font-semibold text-gray-800">{{ __('profile.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-500">{{ __('profile.subtitle') }}</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -39,38 +39,24 @@
                 <!-- Informações Principais -->
                 <div class="space-y-4 border-t border-gray-200 pt-6">
                     <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Número de Processo</p>
+                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('profile.summary.process_number') }}</p>
                         <p class="mt-1 text-sm text-gray-800">{{ $user->num_processo }}</p>
                     </div>
 
-                    @if($user->telefone)
                     <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Telefone</p>
-                        <p class="mt-1 text-sm text-gray-800">{{ $user->telefone }}</p>
-                    </div>
-                    @endif
-
-                    <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Estado</p>
+                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">{{ __('profile.summary.status') }}</p>
                         <p class="mt-1">
                             @if($user->is_aprovado)
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                                    Aprovado
+                                    {{ __('profile.summary.approved') }}
                                 </span>
                             @else
                                 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
-                                    Pendente
+                                    {{ __('profile.summary.pending') }}
                                 </span>
                             @endif
                         </p>
                     </div>
-
-                    @if($user->codigo_mobilidade)
-                    <div>
-                        <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Código de Mobilidade</p>
-                        <p class="mt-1 text-sm text-gray-800">{{ $user->codigo_mobilidade }}</p>
-                    </div>
-                    @endif
                 </div>
             </div>
         </div>
@@ -79,7 +65,7 @@
         <div class="lg:col-span-2 space-y-6">
             <!-- Atualizar Avatar -->
             <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 class="text-base font-semibold text-gray-800 mb-4">Foto de Perfil</h3>
+                <h3 class="text-base font-semibold text-gray-800 mb-4">{{ __('profile.avatar.title') }}</h3>
                 <form method="POST" action="{{ route('profile.avatar.update') }}" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     @method('PUT')
@@ -106,7 +92,7 @@
                                 accept="image/jpeg,image/jpg,image/png"
                                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-teal-700 hover:file:bg-blue-100 @error('avatar') border-red-300 @enderror"
                             >
-                            <p class="mt-1 text-xs text-gray-500">Formatos: JPG, PNG. Máximo 2MB.</p>
+                            <p class="mt-1 text-xs text-gray-500">{{ __('profile.avatar.formats') }}</p>
                             @error('avatar')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -116,7 +102,7 @@
                                 type="submit"
                                 class="px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                             >
-                                Atualizar
+                                {{ __('profile.avatar.update') }}
                             </button>
                         </div>
                     </div>
@@ -125,7 +111,7 @@
 
             <!-- Atualizar Dados Pessoais -->
             <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 class="text-base font-semibold text-gray-800 mb-4">Informações Pessoais</h3>
+                <h3 class="text-base font-semibold text-gray-800 mb-4">{{ __('profile.personal_info.title') }}</h3>
                 <form method="POST" action="{{ route('profile.update') }}" class="space-y-5">
                     @csrf
                     @method('PUT')
@@ -133,7 +119,7 @@
                     <!-- Nome -->
                     <div>
                         <label for="nome" class="block text-sm font-medium text-gray-700 mb-2">
-                            Nome completo <span class="text-red-500">*</span>
+                            {{ __('profile.personal_info.name') }} <span class="text-red-500">*</span>
                         </label>
                         <input 
                             id="nome" 
@@ -151,7 +137,7 @@
                     <!-- Email (apenas leitura) -->
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                            E-mail
+                            {{ __('profile.personal_info.email') }}
                         </label>
                         <input 
                             id="email" 
@@ -160,21 +146,21 @@
                             disabled
                             class="block w-full px-3 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
                         >
-                        <p class="mt-1 text-xs text-gray-500">O e-mail não pode ser alterado.</p>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('profile.personal_info.email_readonly') }}</p>
                     </div>
 
                     <!-- Telefone -->
                     <div>
                         <label for="telefone" class="block text-sm font-medium text-gray-700 mb-2">
-                            Telefone
+                            {{ __('profile.personal_info.phone') }}
                         </label>
-                        <input 
+                        <input
                             id="telefone" 
                             name="telefone" 
                             type="text" 
                             value="{{ old('telefone', $user->telefone) }}"
                             class="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors @error('telefone') border-red-300 @enderror"
-                            placeholder="Ex: +351 912 345 678"
+                            placeholder="{{ __('profile.personal_info.phone_placeholder') }}"
                         >
                         @error('telefone')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -184,7 +170,7 @@
                     <!-- Número de Processo (apenas leitura) -->
                     <div>
                         <label for="num_processo" class="block text-sm font-medium text-gray-700 mb-2">
-                            Número de Processo
+                            {{ __('profile.personal_info.process_number') }}
                         </label>
                         <input 
                             id="num_processo" 
@@ -193,7 +179,7 @@
                             disabled
                             class="block w-full px-3 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
                         >
-                        <p class="mt-1 text-xs text-gray-500">O número de processo não pode ser alterado.</p>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('profile.personal_info.process_readonly') }}</p>
                     </div>
 
                     <!-- Submit Button -->
@@ -202,7 +188,7 @@
                             type="submit"
                             class="px-6 py-3 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                         >
-                            Guardar alterações
+                            {{ __('profile.personal_info.save') }}
                         </button>
                     </div>
                 </form>
@@ -210,7 +196,7 @@
 
             <!-- Alterar Palavra-passe -->
             <div class="bg-white border border-gray-200 rounded-lg p-6">
-                <h3 class="text-base font-semibold text-gray-800 mb-4">Alterar Palavra-passe</h3>
+                <h3 class="text-base font-semibold text-gray-800 mb-4">{{ __('profile.password.title') }}</h3>
                 <form method="POST" action="{{ route('profile.password.update') }}" class="space-y-5">
                     @csrf
                     @method('PUT')
@@ -218,7 +204,7 @@
                     <!-- Password Atual -->
                     <div>
                         <label for="current_password" class="block text-sm font-medium text-gray-700 mb-2">
-                            Palavra-passe atual <span class="text-red-500">*</span>
+                            {{ __('profile.password.current') }} <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -232,7 +218,7 @@
                                 type="password" 
                                 required
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors @error('current_password') border-red-300 @enderror"
-                                placeholder="••••••••"
+                                placeholder="{{ __('profile.password.current_placeholder') }}"
                             >
                         </div>
                         @error('current_password')
@@ -243,7 +229,7 @@
                     <!-- Nova Password -->
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                            Nova palavra-passe <span class="text-red-500">*</span>
+                            {{ __('profile.password.new') }} <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -257,7 +243,7 @@
                                 type="password" 
                                 required
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors @error('password') border-red-300 @enderror"
-                                placeholder="Mínimo 8 caracteres"
+                                placeholder="{{ __('profile.password.new_placeholder') }}"
                             >
                         </div>
                         @error('password')
@@ -268,7 +254,7 @@
                     <!-- Confirmar Password -->
                     <div>
                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
-                            Confirmar nova palavra-passe <span class="text-red-500">*</span>
+                            {{ __('profile.password.confirm') }} <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -282,7 +268,7 @@
                                 type="password" 
                                 required
                                 class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors"
-                                placeholder="Repetir palavra-passe"
+                                placeholder="{{ __('profile.password.confirm_placeholder') }}"
                             >
                         </div>
                     </div>
@@ -293,7 +279,7 @@
                             type="submit"
                             class="px-6 py-3 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                         >
-                            Atualizar palavra-passe
+                            {{ __('profile.password.update') }}
                         </button>
                     </div>
                 </form>

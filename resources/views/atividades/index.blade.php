@@ -1,20 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Atividades')
+@section('title', __('atividades.title'))
 
 @section('content')
 <div class="space-y-8">
     <!-- Page Header -->
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-2xl font-semibold text-gray-800">Atividades</h1>
+            <h1 class="text-2xl font-semibold text-gray-800">{{ __('atividades.title') }}</h1>
             <p class="mt-1 text-sm text-gray-500">
                 @if($cargo === 'admin')
-                    Gerir todas as atividades do sistema
+                    {{ __('atividades.subtitle.admin') }}
                 @elseif($cargo === 'professor')
-                    As tuas atividades e atividades disponíveis
+                    {{ __('atividades.subtitle.professor') }}
                 @else
-                    Atividades disponíveis para inscrição
+                    {{ __('atividades.subtitle.default') }}
                 @endif
             </p>
         </div>
@@ -32,7 +32,7 @@
                 <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Nova Atividade
+                {{ __('atividades.create_button') }}
             </span>
         </a>
         @endif
@@ -42,12 +42,12 @@
     @if($cargo === 'admin')
     <div class="bg-white border border-gray-200 rounded-lg p-4">
         <div class="flex items-center space-x-4">
-            <label class="text-sm font-medium text-gray-700">Filtrar por status:</label>
+            <label class="text-sm font-medium text-gray-700">{{ __('atividades.filters.filter_by_status') }}</label>
             <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                <option value="">Todas</option>
-                <option value="pendente">Pendentes</option>
-                <option value="aprovado">Aprovadas</option>
-                <option value="rejeitado">Rejeitadas</option>
+                <option value="">{{ __('atividades.filters.all') }}</option>
+                <option value="pendente">{{ __('atividades.filters.pending') }}</option>
+                <option value="aprovado">{{ __('atividades.filters.approved') }}</option>
+                <option value="rejeitado">{{ __('atividades.filters.rejected') }}</option>
             </select>
         </div>
     </div>
@@ -59,12 +59,12 @@
         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        <h3 class="mt-4 text-sm font-medium text-gray-900">Nenhuma atividade encontrada</h3>
+        <h3 class="mt-4 text-sm font-medium text-gray-900">{{ __('common.not_found') }}</h3>
         <p class="mt-2 text-sm text-gray-500">
             @if($cargo === 'admin' || $cargo === 'professor')
-                Ainda não foram criadas atividades.
+                {{ __('atividades.empty.no_activities_admin') }}
             @else
-                Não há atividades disponíveis no momento.
+                {{ __('atividades.empty.no_activities') }}
             @endif
         </p>
     </div>
@@ -85,15 +85,15 @@
                     <div class="ml-4">
                         @if($evento->status === 'pendente')
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
-                                Pendente
+                                {{ __('atividades.status.pending') }}
                             </span>
                         @elseif($evento->status === 'aprovado')
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                                Aprovado
+                                {{ __('atividades.status.approved') }}
                             </span>
                         @else
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-red-700 border border-red-200">
-                                Rejeitado
+                                {{ __('atividades.status.rejected') }}
                             </span>
                         @endif
                     </div>
@@ -139,9 +139,9 @@
                 @if($cargo === 'admin' || $cargo === 'professor')
                 <div class="pt-2 border-t border-gray-200">
                     <p class="text-xs text-gray-500">
-                        Criado por <span class="font-medium text-gray-700">{{ $evento->criador->nome ?? 'N/A' }}</span>
+                        {{ __('atividades.created_by') }} <span class="font-medium text-gray-700">{{ $evento->criador->nome ?? __('common.not_available') }}</span>
                         @if($evento->aprovador && $evento->status === 'aprovado')
-                            • Aprovado por <span class="font-medium text-gray-700">{{ $evento->aprovador->nome }}</span>
+                            • {{ __('atividades.approved_by') }} <span class="font-medium text-gray-700">{{ $evento->aprovador->nome }}</span>
                         @endif
                     </p>
                 </div>
@@ -155,21 +155,21 @@
                         href="{{ route('atividades.show', $evento->id) }}" 
                         class="text-sm font-medium text-teal-600 hover:text-teal-700 transition-colors"
                     >
-                        Ver detalhes →
+                        {{ __('atividades.actions.view') }} →
                     </a>
                     <div class="flex items-center space-x-2">
                         @if(in_array($evento->id, $inscricoesUser))
-                        <span class="text-xs text-gray-500">Já estás inscrito</span>
+                        <span class="text-xs text-gray-500">{{ __('atividades.already_registered') }}</span>
                         @elseif($cargo === 'estudante' || $cargo === 'intercambista')
                             @if($evento->status === 'aprovado' && $evento->data_hora >= now())
-                            <span class="text-xs text-teal-600 font-medium">Disponível</span>
+                            <span class="text-xs text-teal-600 font-medium">{{ __('atividades.available') }}</span>
                             @endif
                         @endif
                         @can('update', $evento)
                         <a 
                             href="{{ route('atividades.edit', $evento->id) }}" 
                             class="text-xs text-gray-500 hover:text-teal-600 transition-colors"
-                            title="Editar"
+                            title="{{ __('atividades.actions.edit') }}"
                         >
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

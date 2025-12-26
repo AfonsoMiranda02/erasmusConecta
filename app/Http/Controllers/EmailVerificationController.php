@@ -20,7 +20,7 @@ class EmailVerificationController extends Controller
     /**
      * Verifica o email do utilizador
      */
-    public function verify(Request $request, $token)
+    /**public function verify(Request $request, $token)
     {
         // Buscar utilizador com token não verificado
         $users = User::whereNull('email_verified_at')
@@ -57,7 +57,7 @@ class EmailVerificationController extends Controller
 
         return redirect()->route('login')
             ->with('success', 'Email verificado com sucesso! Podes agora fazer login.');
-    }
+    }**/
 
     /**
      * Reenvia o email de verificação

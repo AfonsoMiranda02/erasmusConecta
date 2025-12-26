@@ -15,6 +15,8 @@ class documentos extends Model
         'file_path',
         'dh_entrega',
         'entregue_por_user_id',
+        'estado',
+        'mensagem_rejeicao',
     ];
 
     protected $casts = [
@@ -24,6 +26,8 @@ class documentos extends Model
         'file_path' => 'string',
         'dh_entrega' => 'datetime',
         'entregue_por_user_id' => 'integer',
+        'estado' => 'string',
+        'mensagem_rejeicao' => 'string',
     ];
 
     public function user(){
