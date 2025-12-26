@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateProfileRequest;
 use App\Http\Requests\UpdatePreferencesRequest;
+use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\UpdatePasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
 
 class SettingsController extends Controller
 {
@@ -27,9 +30,24 @@ class SettingsController extends Controller
 
         $user->update([
             'nome' => $request->nome,
+            'telefone' => $request->telefone,
         ]);
 
-        return redirect()->route('settings.edit')->with('success', 'Perfil atualizado com sucesso!');
+        return redirect()->route('settings.edit')->with('success', __('common.messages.success.profile_updated'));
+    }
+
+    /**
+     * Atualiza a palavra-passe
+     */
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $user = Auth::user();
+
+        $user->update([
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('settings.edit')->with('success', __('common.messages.success.password_updated'));
     }
 
     /**
@@ -44,6 +62,11 @@ class SettingsController extends Controller
             'locale' => $request->locale ?? 'pt_PT',
         ]);
 
-        return redirect()->route('settings.edit')->with('success', 'Preferências atualizadas com sucesso!');
+        // Aplicar o novo locale imediatamente
+        if ($user->locale) {
+            App::setLocale($user->locale);
+        }
+
+        return redirect()->route('settings.edit')->with('success', __('settings.updated_successfully'));
     }
 }

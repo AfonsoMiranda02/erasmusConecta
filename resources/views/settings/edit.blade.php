@@ -1,196 +1,214 @@
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 @extends('layouts.app')
 
-@section('title', 'Configurações')
+@section('title', __('settings.title'))
 
 @section('content')
 <div class="space-y-8">
     <!-- Page Header -->
-    <div>
-        <h1 class="text-2xl font-semibold text-gray-800">Configurações</h1>
-        <p class="mt-1 text-sm text-gray-500">Gerir preferências e informações da tua conta.</p>
+    <div class="mb-8">
+        <h1 class="text-2xl font-semibold text-gray-800">{{ __('settings.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-500">{{ __('settings.subtitle') }}</p>
     </div>
 
-    <div class="space-y-6">
-        <!-- Secção: Perfil -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 class="text-base font-semibold text-gray-800 mb-4">Perfil</h3>
-            <form method="POST" action="{{ route('settings.profile.update') }}" class="space-y-5">
-                @csrf
-                @method('PUT')
+    <!-- Secção: Perfil -->
+    <div class="bg-white border border-gray-200 rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-base font-semibold text-gray-800">{{ __('settings.profile_section.title') }}</h2>
+        </div>
+        <div class="p-6">
+            <!-- Aviso Informativo -->
+            <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <p class="text-sm text-blue-800">
+                            {{ __('settings.profile_section.info_message') }}
+                        </p>
+                        <div class="mt-2">
+                            <a 
+                                href="{{ route('profile.show') }}" 
+                                class="text-sm font-medium text-blue-600 hover:text-blue-700 underline"
+                            >
+                                {{ __('settings.profile_section.info_link') }} →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Informações do Perfil (apenas visualização) -->
+            <div class="space-y-4">
                 <!-- Nome -->
                 <div>
-                    <label for="nome" class="block text-sm font-medium text-gray-700 mb-2">
-                        Nome <span class="text-red-500">*</span>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">
+                        {{ __('settings.profile_section.name') }}
                     </label>
-                    <input 
-                        id="nome" 
-                        name="nome" 
-                        type="text" 
-                        required 
-                        value="{{ old('nome', $user->nome) }}"
-                        class="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors @error('nome') border-red-300 @enderror"
-                    >
-                    @error('nome')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
+                    <p class="text-sm text-gray-800">{{ $user->nome }}</p>
                 </div>
 
-                <!-- Email (apenas leitura) -->
+                <!-- Email -->
                 <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        E-mail
+                    <label class="block text-sm font-medium text-gray-500 mb-1">
+                        {{ __('settings.profile_section.email') }}
                     </label>
-                    <input 
-                        id="email" 
-                        type="email" 
-                        value="{{ $user->email }}"
-                        disabled
-                        class="block w-full px-3 py-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
-                    >
-                    <p class="mt-1 text-xs text-gray-500">O e-mail não pode ser alterado.</p>
+                    <p class="text-sm text-gray-800">{{ $user->email }}</p>
                 </div>
 
-                <!-- Botões -->
-                <div class="pt-4 flex space-x-3">
-                    <button 
-                        type="submit"
-                        class="px-6 py-3 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
-                    >
-                        Guardar alterações
-                    </button>
-                    <a 
-                        href="{{ route('settings.edit') }}"
-                        class="px-6 py-3 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
-                    >
-                        Cancelar
-                    </a>
+                <!-- Telefone -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">
+                        {{ __('settings.profile_section.phone') }}
+                    </label>
+                    <p class="text-sm text-gray-800">{{ $user->telefone ?? '-' }}</p>
                 </div>
-            </form>
-        </div>
 
-        <!-- Secção: Segurança -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 class="text-base font-semibold text-gray-800 mb-4">Segurança</h3>
-            <div class="flex items-start space-x-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <svg class="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p class="text-sm text-blue-800">
-                    A gestão da palavra-passe é feita através do sistema de autenticação principal.
-                </p>
+                <!-- Número de Processo -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">
+                        {{ __('settings.profile_section.process_number') }}
+                    </label>
+                    <p class="text-sm text-gray-800">{{ $user->num_processo }}</p>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Secção: Preferências -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 class="text-base font-semibold text-gray-800 mb-4">Preferências</h3>
-            <form method="POST" action="{{ route('settings.preferences.update') }}" class="space-y-5">
+    <!-- Secção: Preferências -->
+    <div class="bg-white border border-gray-200 rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-base font-semibold text-gray-800">{{ __('settings.preferences_section.title') }}</h2>
+        </div>
+        <div class="p-6">
+            <form action="{{ route('settings.preferences.update') }}" method="POST" class="space-y-5">
                 @csrf
                 @method('PUT')
-
-                <!-- Receber notificações por email -->
-                <div class="flex items-center">
-                    <input 
-                        id="prefer_email" 
-                        name="prefer_email" 
-                        type="checkbox" 
-                        value="1"
-                        {{ old('prefer_email', $user->prefer_email ?? true) ? 'checked' : '' }}
-                        class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
-                    >
-                    <label for="prefer_email" class="ml-3 block text-sm text-gray-700">
-                        Receber notificações por email
-                    </label>
-                </div>
 
                 <!-- Idioma -->
                 <div>
                     <label for="locale" class="block text-sm font-medium text-gray-700 mb-2">
-                        Idioma
+                        {{ __('settings.preferences_section.language') }}
                     </label>
                     <select 
-                        id="locale" 
-                        name="locale"
+                        name="locale" 
+                        id="locale"
                         class="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-colors @error('locale') border-red-300 @enderror"
                     >
-                        <option value="pt_PT" {{ old('locale', $user->locale ?? 'pt_PT') === 'pt_PT' ? 'selected' : '' }}>PT-PT</option>
-                        <option value="en" {{ old('locale', $user->locale ?? 'pt_PT') === 'en' ? 'selected' : '' }}>EN</option>
+                        @foreach(__('settings.languages') as $code => $name)
+                            <option value="{{ $code }}" {{ $user->locale === $code ? 'selected' : '' }}>
+                                {{ $name }}
+                            </option>
+                        @endforeach
                     </select>
+                    <p class="mt-1 text-xs text-gray-500">
+                        {{ __('settings.preferences_section.select_language') }}
+                    </p>
                     @error('locale')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <!-- Botões -->
-                <div class="pt-4 flex space-x-3">
+                <!-- Notificações por Email -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        {{ __('settings.preferences_section.email_notifications') }}
+                    </label>
+                    <div class="flex items-center">
+                        <input 
+                            type="checkbox" 
+                            name="prefer_email" 
+                            id="prefer_email"
+                            value="1"
+                            {{ $user->prefer_email ? 'checked' : '' }}
+                            class="h-4 w-4 text-teal-600 focus:ring-teal-500 border-gray-300 rounded"
+                        >
+                        <label for="prefer_email" class="ml-2 block text-sm text-gray-700">
+                            {{ __('settings.preferences_section.prefer_email_label') }}
+                        </label>
+                    </div>
+                    @error('prefer_email')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-4">
                     <button 
                         type="submit"
                         class="px-6 py-3 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
                     >
-                        Guardar alterações
+                        {{ __('settings.preferences_section.save') }}
                     </button>
-                    <a 
-                        href="{{ route('settings.edit') }}"
-                        class="px-6 py-3 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
-                    >
-                        Cancelar
-                    </a>
                 </div>
             </form>
         </div>
+    </div>
 
-        <!-- Secção: Conta -->
-        <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 class="text-base font-semibold text-gray-800 mb-4">Conta</h3>
-            
+    <!-- Secção: Conta -->
+    <div class="bg-white border border-gray-200 rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-base font-semibold text-gray-800">{{ __('settings.account_section.title') }}</h2>
+        </div>
+        <div class="p-6 space-y-6">
             <!-- Estado da Conta -->
-            <div class="mb-6">
-                <p class="text-sm font-medium text-gray-700 mb-2">Estado da Conta</p>
-                <div class="mt-2">
-                    @if($user->is_active && $user->is_aprovado)
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                            Ativa
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    {{ __('settings.account_section.status') }}
+                </label>
+                <div class="mt-1">
+                    @if($user->is_aprovado)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-50 text-green-700 border border-green-200">
+                            {{ __('settings.account_section.status_active') }}
                         </span>
-                    @elseif(!$user->is_active)
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-50 text-red-700 border border-red-200">
-                            Desativada
+                    @elseif($user->is_active && !$user->is_aprovado)
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
+                            {{ __('settings.account_section.status_pending') }}
                         </span>
                     @else
-                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-50 text-yellow-700 border border-yellow-200">
-                            Pendente
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-700 border border-red-200">
+                            {{ __('settings.account_section.status_inactive') }}
                         </span>
                     @endif
                 </div>
+                
+                @if($user->isEstudante() && !$user->is_aprovado)
+                    <div class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-yellow-800">
+                                    {{ __('settings.account_section.pending_warning') }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
-            <!-- Aviso se estudante em mobilidade e pendente -->
-            @if(($user->cargo === 'estudante' || $user->cargo === 'intercambista') && !$user->is_aprovado)
-                <div class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <div class="flex items-start space-x-3">
-                        <svg class="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                        </svg>
-                        <p class="text-sm text-yellow-800">
-                            A tua conta aguarda validação pelo administrador.
-                        </p>
-                    </div>
-                </div>
-            @endif
-
-            <!-- Eliminar Conta -->
-            <div class="pt-4 border-t border-gray-200">
-                <p class="text-sm font-medium text-gray-700 mb-2">Eliminar Conta</p>
-                <p class="text-xs text-gray-500 mb-4">
-                    Ao eliminar a tua conta, todos os teus dados serão permanentemente removidos. Esta ação não pode ser desfeita.
+            <!-- Eliminar Conta (TODO) -->
+            <div class="pt-6 border-t border-gray-200">
+                <h3 class="text-sm font-semibold text-gray-800 mb-2">{{ __('settings.account_section.delete_account') }}</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                    {{ __('settings.account_section.delete_warning') }}
                 </p>
-                <!-- TODO: Implementar lógica de eliminação de conta -->
+                <!-- TODO: Implementar eliminação de conta -->
                 <button 
                     type="button"
                     disabled
-                    class="px-6 py-3 bg-red-600 text-white text-sm font-medium rounded-lg opacity-50 cursor-not-allowed"
+                    class="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg opacity-50 cursor-not-allowed"
+                    title="{{ __('settings.account_section.delete_todo') }}"
                 >
-                    Eliminar conta
+                    {{ __('settings.account_section.delete_button') }}
                 </button>
             </div>
         </div>

@@ -45,8 +45,6 @@ class User extends Authenticatable
         'avatar_path' => 'string',
         'email_verified_at' => 'datetime',
         'email_verification_token' => 'string',
-        'prefer_email' => 'boolean',
-        'locale' => 'string',
     ];
 
     public function eventosCriados(){
@@ -79,6 +77,10 @@ class User extends Authenticatable
 
     public function notificacoes(){
         return $this->hasMany(notificacoes::class, 'user_id');
+    }
+
+    public function pushSubscriptions(){
+        return $this->hasMany(PushSubscription::class, 'user_id');
     }
 
     /**

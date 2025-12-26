@@ -33,7 +33,7 @@ class ProfileController extends Controller
             'telefone' => $request->telefone,
         ]);
 
-        return redirect()->route('profile.show')->with('success', 'Perfil atualizado com sucesso!');
+        return redirect()->route('profile.show')->with('success', __('common.messages.success.profile_updated'));
     }
 
     /**
@@ -47,7 +47,7 @@ class ProfileController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('profile.show')->with('success', 'Palavra-passe atualizada com sucesso!');
+        return redirect()->route('profile.show')->with('success', __('common.messages.success.password_updated'));
     }
 
     /**
@@ -69,6 +69,6 @@ class ProfileController extends Controller
             'avatar_path' => $path,
         ]);
 
-        return redirect()->route('profile.show')->with('success', 'Avatar atualizado com sucesso!');
+        return redirect()->route('profile.show')->with('success', __('common.messages.success.avatar_updated'));
     }
 }

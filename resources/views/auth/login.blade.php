@@ -3,8 +3,8 @@
 @section('content')
 <div class="space-y-6">
     <div>
-        <h2 class="text-2xl font-semibold text-gray-900 mb-1">Entrar</h2>
-        <p class="text-sm text-gray-600">Acede à tua conta ErasmusConecta</p>
+        <h2 class="text-2xl font-semibold text-gray-900 mb-1">{{ __('auth.login.title') }}</h2>
+        <p class="text-sm text-gray-600">{{ __('auth.login.subtitle') }}</p>
     </div>
 
     @if(session('password_reset'))
@@ -25,7 +25,7 @@
         <!-- Email -->
         <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                E-mail
+                {{ __('auth.login.email') }}
             </label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -41,7 +41,7 @@
                     required 
                     value="{{ old('email') }}"
                     class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('email') border-red-300 @enderror"
-                    placeholder="exemplo@ipvc.pt"
+                    placeholder="{{ __('auth.login.email_placeholder') }}"
                 >
             </div>
             @error('email')
@@ -52,7 +52,7 @@
         <!-- Password -->
         <div>
             <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                Palavra-passe
+                {{ __('auth.login.password') }}
             </label>
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -67,7 +67,7 @@
                     autocomplete="current-password" 
                     required
                     class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('password') border-red-300 @enderror"
-                    placeholder="••••••••"
+                    placeholder="{{ __('auth.login.password_placeholder') }}"
                 >
             </div>
             @error('password')
@@ -85,13 +85,13 @@
                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 >
                 <label for="remember" class="ml-2 block text-sm text-gray-700">
-                    Lembrar-me
+                    {{ __('auth.login.remember') }}
                 </label>
             </div>
 
             <div class="text-sm">
                 <a href="{{ route('password.request') }}" class="font-medium text-blue-600 hover:text-blue-500">
-                    Esqueceste-te da palavra-passe?
+                    {{ __('auth.login.forgot_password') }}
                 </a>
             </div>
         </div>
@@ -102,7 +102,7 @@
                 type="submit" 
                 class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
-                Entrar
+                {{ __('auth.login.submit') }}
             </button>
         </div>
     </form>
@@ -110,9 +110,9 @@
     <!-- Register Link -->
     <div class="mt-6 text-center">
         <p class="text-sm text-gray-600">
-            Ainda não tens conta?
+            {{ __('auth.login.no_account') }}
             <a href="{{ route('register') }}" class="font-medium text-blue-600 hover:text-blue-500">
-                Criar conta
+                {{ __('auth.login.create_account') }}
             </a>
         </p>
     </div>
