@@ -1,20 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Mensagens')
+@section('title', __('mensagens.title'))
 
 @section('content')
 <div class="space-y-6">
     <!-- Page Header -->
     <div class="mb-8">
-        <h1 class="text-2xl font-semibold text-gray-800">Mensagens</h1>
-        <p class="mt-1 text-sm text-gray-500">Todas as suas notificações</p>
+        <h1 class="text-2xl font-semibold text-gray-800">{{ __('mensagens.title') }}</h1>
+        <p class="mt-1 text-sm text-gray-500">{{ __('mensagens.subtitle') }}</p>
     </div>
 
     <!-- Stats Card -->
     <div class="bg-white border border-gray-200 rounded-lg p-5 mb-6">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-500">Mensagens por ler</p>
+                <p class="text-sm font-medium text-gray-500">{{ __('mensagens.stats.unread_messages') }}</p>
                 <p class="mt-1 text-3xl font-semibold text-gray-900" id="unreadMessagesCount">{{ $naoLidas }}</p>
             </div>
             <div class="flex items-center space-x-4">
@@ -22,7 +22,7 @@
                     <form action="{{ route('notifications.read-all') }}" method="POST" class="inline">
                         @csrf
                         <button type="submit" class="px-4 py-2 bg-teal-600 text-white text-sm font-medium rounded-lg hover:bg-teal-700 transition-colors">
-                            Marcar todas como lidas
+                            {{ __('mensagens.actions.mark_all_read') }}
                         </button>
                     </form>
                 @endif
@@ -62,7 +62,7 @@
                                             <form action="{{ route('notifications.read', $notificacao->id) }}" method="POST" class="inline">
                                                 @csrf
                                                 <button type="submit" class="text-xs text-teal-600 hover:text-teal-700 font-medium">
-                                                    Marcar como lida
+                                                    {{ __('mensagens.actions.mark_as_read') }}
                                                 </button>
                                             </form>
                                         @endif
@@ -83,8 +83,8 @@
                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
-                <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhuma mensagem</h3>
-                <p class="mt-1 text-sm text-gray-500">Você não tem notificações ainda.</p>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('mensagens.empty.no_messages') }}</h3>
+                <p class="mt-1 text-sm text-gray-500">{{ __('mensagens.empty.no_notifications') }}</p>
             </div>
         @endif
     </div>

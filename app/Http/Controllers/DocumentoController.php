@@ -55,7 +55,7 @@ class DocumentoController extends Controller
         ]);
 
         return redirect()->route('documentos.index')
-            ->with('success', 'Documento submetido com sucesso! Aguarda aprovação do administrador.');
+            ->with('success', __('documentos.messages.submitted_success'));
     }
 
     /**
@@ -102,6 +102,6 @@ class DocumentoController extends Controller
         ]);
 
         return redirect()->route('documentos.index')
-            ->with('success', 'Documento reenviado com sucesso! Aguarda nova aprovação do administrador.');
+            ->with('success', __('documentos.messages.resubmitted_success'));
     }
 }
